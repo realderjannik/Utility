@@ -1,0 +1,30 @@
+backpack:
+  slots: 54
+  allow-shulkers: false
+  allow-admin-edit: true
+
+homes:
+  max-homes: 5
+
+tpa:
+  delay-seconds: 3
+  expire-seconds: 60
+  show-particles: true
+
+use-command:
+  bp: true
+  craft: true
+  day: true
+  ec: true
+  home: true
+  head: true
+  hat: true
+  info: false
+  invsee: true
+  lastdeath: true
+  ping: true
+  playtime: true
+  rename: true
+  spawn: true
+  tpa: true
+  uuid: true
