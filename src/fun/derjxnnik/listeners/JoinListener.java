@@ -30,7 +30,8 @@ public class JoinListener implements Listener {
    }
 
    private void updateTablistForAll() {
-      String header = Colors.BOLD_DARK_AQUA + "SMP.DERJXNNIK.FUN\n";
+      String serverName = plugin.getConfig().getString("server.name", "SMP");
+      String header = Colors.BOLD_DARK_AQUA + serverName + "\n";
       String var10000 = Colors.DARK_AQUA;
       String footer = "\n " + var10000 + "Online Players: " + Colors.YELLOW + Bukkit.getOnlinePlayers().size() + Colors.GRAY + "/" + Colors.YELLOW + Bukkit.getMaxPlayers();
 

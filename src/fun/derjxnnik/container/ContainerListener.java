@@ -47,12 +47,6 @@ public class ContainerListener implements Listener {
             Chest data = (Chest)var4;
             Chest.Type type = data.getType();
             if (type == Type.LEFT || type == Type.RIGHT) {
-               if (type == Type.LEFT) {
-                  data.getFacing().getOppositeFace().getOppositeFace();
-               } else {
-                  data.getFacing().getOppositeFace();
-               }
-
                BlockFace var10000;
                switch (data.getFacing()) {
                   case NORTH -> var10000 = type == Type.LEFT ? BlockFace.EAST : BlockFace.WEST;

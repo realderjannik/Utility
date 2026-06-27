@@ -11,6 +11,10 @@ tpa:
   expire-seconds: 60
   show-particles: true
 
+server:
+  name: "SMP.DerJxnnik.FUN"
+  website: "DerJxnnik.fun"
+
 use-command:
   bp: true
   craft: true
@@ -19,7 +23,7 @@ use-command:
   home: true
   head: true
   hat: true
-  info: false
+  info: true
   invsee: true
   lastdeath: true
   ping: true

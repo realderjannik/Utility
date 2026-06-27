@@ -1,6 +1,7 @@
 package fun.derjxnnik.utility.scoreboard;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.utility.Utility;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import net.kyori.adventure.text.Component;
@@ -15,7 +16,8 @@ public class ScoreboardBuilder {
    public static Scoreboard build(Player p) {
       org.bukkit.scoreboard.ScoreboardManager manager = Bukkit.getScoreboardManager();
       Scoreboard board = manager.getNewScoreboard();
-      Objective obj = board.registerNewObjective("stats", "dummy", Component.text(Colors.BOLD_DARK_AQUA + "SMP.DerJxnnik.FUN"));
+      String serverName = Utility.getInstance().getConfig().getString("server.name", "SMP");
+      Objective obj = board.registerNewObjective("stats", "dummy", Component.text(Colors.BOLD_DARK_AQUA + serverName));
       obj.setDisplaySlot(DisplaySlot.SIDEBAR);
       LocalTime now = LocalTime.now();
       String time = now.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
