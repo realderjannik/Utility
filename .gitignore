@@ -2,11 +2,19 @@
 .gradle/
 build/
 *.jar
+*.class
 
 # IDE
 .idea/
 *.iml
 .vscode/
+/shelf/
+/workspace.xml
+/httpRequests/
+/queries/
+/dataSources/
+/dataSources.local.xml
+/out/
 
 # OS
 .DS_Store
