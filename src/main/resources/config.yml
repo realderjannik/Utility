@@ -39,9 +39,21 @@ ranks:
   # "default" wird verwendet wenn kein passender Rang gefunden wird
   gradients:
     admin:
-      colors: ["#FF5555", "#AA00AA"]
-    mod:
-      colors: ["#55FF55", "#0055FF"]
+      colors: ["#FF4444", "#AA0000"]
+    a-moderator:
+      colors: ["#FF8800", "#FF4400"]
+    d-moderator:
+      colors: ["#FFD700", "#FFA500"]
+    streamer:
+      colors: ["#9B59B6", "#E91E8C"]
+    a-vip:
+      colors: ["#FFD700", "#FFC107"]
+    d-vip:
+      colors: ["#ADFF2F", "#7CFC00"]
+    a-subscriber:
+      colors: ["#00BCD4", "#0097A7"]
+    d-subscriber:
+      colors: ["#64B5F6", "#1976D2"]
     default:
       colors: ["#AAAAAA", "#FFFFFF"]
 

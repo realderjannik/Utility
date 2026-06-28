@@ -6,6 +6,10 @@ import fun.derjxnnik.backpack.BackpackListener;
 import fun.derjxnnik.backpack.BackpackManager;
 import fun.derjxnnik.commands.BackpackCommand;
 import fun.derjxnnik.commands.BugreportCommand;
+import fun.derjxnnik.commands.CoinsCommand;
+import fun.derjxnnik.commands.PayCommand;
+import fun.derjxnnik.commands.PaymentsCommand;
+import fun.derjxnnik.currency.CurrencyManager;
 import fun.derjxnnik.chat.ColorManager;
 import fun.derjxnnik.commands.ColorCommand;
 import fun.derjxnnik.commands.CraftCommand;
@@ -72,6 +76,7 @@ public final class Utility extends JavaPlugin {
    private RankManager rankManager;
    private ColorManager colorManager;
    private ResourcePackManager resourcePackManager;
+   private CurrencyManager currencyManager;
 
    public void onEnable() {
       instance = this;
@@ -101,6 +106,7 @@ public final class Utility extends JavaPlugin {
       this.lockManager = new LockManager(this);
       this.rankManager = new RankManager();
       this.colorManager = new ColorManager(settingsManager);
+      this.currencyManager = new CurrencyManager(this.getDataFolder());
       if (this.getConfig().getBoolean("resource-pack.enabled", true)) {
          this.resourcePackManager = new ResourcePackManager(this.getDataFolder());
          this.resourcePackManager.start();
@@ -131,6 +137,11 @@ public final class Utility extends JavaPlugin {
       this.getCommand("bugreport").setExecutor(new BugreportCommand());
       this.getCommand("color").setExecutor(new ColorCommand(this.colorManager));
       this.getCommand("color").setTabCompleter(new ColorTabCompleter());
+      PayCommand payCommand = new PayCommand(this.currencyManager);
+      this.getCommand("pay").setExecutor(payCommand);
+      this.getCommand("pay").setTabCompleter(payCommand);
+      this.getCommand("coins").setExecutor(new CoinsCommand(this.currencyManager));
+      this.getCommand("payments").setExecutor(new PaymentsCommand(this.currencyManager));
       ContainerCommand containerCommand = new ContainerCommand(this.lockManager);
       this.getCommand("container").setExecutor(containerCommand);
       this.getCommand("backpack").setTabCompleter(new BackpackTabCompleter());
@@ -177,8 +188,15 @@ public final class Utility extends JavaPlugin {
          "resourcepack/assets/minecraft/textures/font/icon_deaths.png",
          "resourcepack/assets/minecraft/textures/font/icon_playtime.png",
          "resourcepack/assets/minecraft/textures/font/icon_ping.png",
+         "resourcepack/assets/minecraft/textures/font/icon_money.png",
+         "resourcepack/assets/minecraft/textures/font/icon_clan.png",
          "resourcepack/assets/minecraft/textures/font/small_caps_ascii.png",
-         "resourcepack/assets/minecraft/textures/font/logo.png"
+         "resourcepack/assets/minecraft/textures/font/logo.png",
+         "resourcepack/assets/minecraft/textures/font/label_XS.png",
+         "resourcepack/assets/minecraft/textures/font/label_S.png",
+         "resourcepack/assets/minecraft/textures/font/label_M.png",
+         "resourcepack/assets/minecraft/textures/font/label_L.png",
+         "resourcepack/assets/minecraft/textures/font/label_XL.png"
       };
       for (String path : files) {
          File target = new File(getDataFolder(), path);
@@ -216,5 +234,9 @@ public final class Utility extends JavaPlugin {
 
    public ResourcePackManager getResourcePackManager() {
       return resourcePackManager;
+   }
+
+   public CurrencyManager getCurrencyManager() {
+      return currencyManager;
    }
 }

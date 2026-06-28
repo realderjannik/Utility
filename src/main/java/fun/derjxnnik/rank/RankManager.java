@@ -100,7 +100,10 @@ public class RankManager {
 
         if (colors.size() < 2) return LEGACY.deserialize(raw);
 
-        String mm = "<font:minecraft:small_caps><gradient:" + colors.get(0) + ":" + colors.get(1) + ">" + plain + "</gradient></font>";
+        String color1 = colors.get(0);
+        String color2 = colors.get(1);
+
+        String mm = "<font:minecraft:small_caps><gradient:" + color1 + ":" + color2 + ">" + plain.toLowerCase() + "</gradient></font>";
         return MiniMessage.miniMessage().deserialize(mm);
     }
 

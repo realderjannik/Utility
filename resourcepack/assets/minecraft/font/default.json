@@ -1,46 +1,24 @@
-﻿{
+{
   "providers": [
-    {
-      "type": "bitmap",
-      "file": "minecraft:font/icon_time.png",
-      "height": 9,
-      "ascent": 8,
-      "chars": [""]
-    },
-    {
-      "type": "bitmap",
-      "file": "minecraft:font/icon_kills.png",
-      "height": 9,
-      "ascent": 8,
-      "chars": [""]
-    },
-    {
-      "type": "bitmap",
-      "file": "minecraft:font/icon_deaths.png",
-      "height": 9,
-      "ascent": 8,
-      "chars": [""]
-    },
-    {
-      "type": "bitmap",
-      "file": "minecraft:font/icon_playtime.png",
-      "height": 9,
-      "ascent": 8,
-      "chars": [""]
-    },
-    {
-      "type": "bitmap",
-      "file": "minecraft:font/icon_ping.png",
-      "height": 9,
-      "ascent": 8,
-      "chars": [""]
-    },
-    {
-      "type": "bitmap",
-      "file": "minecraft:font/logo.png",
-      "height": 32,
-      "ascent": 32,
-      "chars": [""]
-    }
+    { "type": "bitmap", "file": "minecraft:font/icon_time.png",     "height": 9,  "ascent": 8, "chars": [""] },
+    { "type": "bitmap", "file": "minecraft:font/icon_kills.png",    "height": 9,  "ascent": 8, "chars": [""] },
+    { "type": "bitmap", "file": "minecraft:font/icon_deaths.png",   "height": 9,  "ascent": 8, "chars": [""] },
+    { "type": "bitmap", "file": "minecraft:font/icon_playtime.png", "height": 9,  "ascent": 8, "chars": [""] },
+    { "type": "bitmap", "file": "minecraft:font/icon_ping.png",     "height": 9,  "ascent": 8, "chars": [""] },
+    { "type": "bitmap", "file": "minecraft:font/icon_money.png",    "height": 9,  "ascent": 8, "chars": [""] },
+    { "type": "bitmap", "file": "minecraft:font/icon_clan.png",     "height": 9,  "ascent": 8, "chars": [""] },
+    { "type": "bitmap", "file": "minecraft:font/logo.png",          "height": 32, "ascent": 32, "chars": [""] },
+    { "type": "bitmap", "file": "minecraft:font/label_XS.png",  "height": 12, "ascent": 8, "chars": [""] },
+    { "type": "bitmap", "file": "minecraft:font/label_S.png",   "height": 12, "ascent": 8, "chars": [""] },
+    { "type": "bitmap", "file": "minecraft:font/label_M.png",   "height": 12, "ascent": 8, "chars": [""] },
+    { "type": "bitmap", "file": "minecraft:font/label_L.png",   "height": 12, "ascent": 8, "chars": [""] },
+    { "type": "bitmap", "file": "minecraft:font/label_XL.png",  "height": 12, "ascent": 8, "chars": [""] },
+    { "type": "space", "advances": {
+        "": -25,
+        "": -28,
+        "": -32,
+        "": -37,
+        "": -53
+    } }
   ]
 }
