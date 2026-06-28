@@ -1,3 +1,12 @@
+resource-pack:
+  enabled: true
+  # Öffentliche IP deines Servers (z.B. "123.45.67.89")
+  server-ip: ""
+  # Port auf dem das Pack ausgeliefert wird (muss in der Firewall offen sein)
+  port: 8080
+  # Nachricht die Spielern beim Download-Dialog angezeigt wird
+  prompt: "Bitte akzeptiere das Resource Pack!"
+
 backpack:
   slots: 54
   allow-shulkers: false

@@ -5,6 +5,7 @@ import fun.derjxnnik.misc.Colors;
 import fun.derjxnnik.rank.RankManager;
 import fun.derjxnnik.utility.Utility;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -17,6 +18,8 @@ import org.bukkit.event.Listener;
 public class ChatListener implements Listener {
 
     private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.legacySection();
+    private static final Key SC = Key.key("minecraft", "small_caps");
+    private static final Key DEFAULT_FONT = Key.key("minecraft", "default");
 
     private final RankManager rankManager;
     private final ColorManager colorManager;
@@ -44,19 +47,20 @@ public class ChatListener implements Listener {
                 Component prefix = rankManager.buildGradientPrefix(player);
                 if (!prefix.equals(Component.empty())) {
                     sender = prefix
-                            .append(Component.text(" | ", NamedTextColor.GRAY))
-                            .append(Component.text(player.getName(), NamedTextColor.WHITE))
-                            .append(Component.text(": ", NamedTextColor.GRAY));
+                            .append(Component.text(" | ", NamedTextColor.GRAY).font(SC))
+                            .append(Component.text(player.getName(), NamedTextColor.WHITE).font(SC))
+                            .append(Component.text(": ", NamedTextColor.GRAY).font(DEFAULT_FONT));
                 } else {
-                    sender = Component.text(player.getName(), NamedTextColor.WHITE)
-                            .append(Component.text(": ", NamedTextColor.GRAY));
+                    sender = Component.text(player.getName(), NamedTextColor.WHITE).font(SC)
+                            .append(Component.text(": ", NamedTextColor.GRAY).font(DEFAULT_FONT));
                 }
             } else {
-                sender = Component.text(player.getName(), NamedTextColor.WHITE)
-                        .append(Component.text(": ", NamedTextColor.GRAY));
+                sender = Component.text(player.getName(), NamedTextColor.WHITE).font(DEFAULT_FONT)
+                        .append(Component.text(": ", NamedTextColor.GRAY).font(DEFAULT_FONT));
             }
 
-            return sender.append(processedMessage);
+            Component msg = Component.empty().font(DEFAULT_FONT).append(processedMessage);
+            return sender.append(msg);
         });
     }
 

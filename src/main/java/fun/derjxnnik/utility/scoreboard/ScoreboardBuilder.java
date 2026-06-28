@@ -6,17 +6,24 @@ import fun.derjxnnik.rank.RankManager;
 import fun.derjxnnik.utility.Utility;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 public class ScoreboardBuilder {
+
+   private static final Key SC = Key.key("minecraft", "small_caps");
+   private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.legacySection();
+
    public static Scoreboard build(Player p) {
       org.bukkit.scoreboard.ScoreboardManager manager = Bukkit.getScoreboardManager();
       Scoreboard board = manager.getNewScoreboard();
@@ -26,17 +33,17 @@ public class ScoreboardBuilder {
       FileConfiguration config = Utility.getInstance().getConfig();
       RankManager rankManager = Utility.getInstance().getRankManager();
 
-      // Register nametag teams for all online players on this board
       if (rankManager != null) {
          rankManager.applyAllNametagTeams(board);
       }
 
-      // Rank line (score 7, above the spacer at 6)
       if (rankManager != null && rankManager.isAvailable() && config.getBoolean("ranks.show-in-scoreboard", true)) {
          String prefix = rankManager.getPrefix(p);
          if (!prefix.isEmpty()) {
             String label = config.getString("ranks.scoreboard-label", "Rang");
-            obj.getScore(Colors.GRAY + label + ": " + prefix).setScore(7);
+            setEntry(obj, "§r", 7,
+                    Component.text(label + ": ", NamedTextColor.GRAY).font(SC)
+                            .append(LEGACY.deserialize(prefix)));
          }
       }
 
@@ -44,14 +51,37 @@ public class ScoreboardBuilder {
       String time = now.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
       int kills = p.getStatistic(Statistic.PLAYER_KILLS);
       int deaths = p.getStatistic(Statistic.DEATHS);
-      obj.getScore("").setScore(6);
-      obj.getScore(Colors.WHITE + Icons.TIME     + Colors.DARK_AQUA + " Zeit "     + Colors.WHITE + time).setScore(5);
-      obj.getScore(Colors.WHITE + Icons.KILLS    + Colors.GREEN     + " Kills "    + Colors.WHITE + kills).setScore(4);
-      obj.getScore(Colors.WHITE + Icons.DEATHS   + Colors.RED       + " Tode "     + Colors.WHITE + deaths).setScore(3);
-      obj.getScore(Colors.WHITE + Icons.PLAYTIME + Colors.YELLOW    + " Spielzeit "+ Colors.WHITE + getPlaytime(p)).setScore(2);
-      obj.getScore("§1").setScore(1);
-      obj.getScore(Colors.WHITE + Icons.PING     + Colors.GRAY      + " Ping "     + Colors.GREEN + p.getPing() + Colors.GRAY + "ms").setScore(0);
+
+      setEntry(obj, "§a", 6, Component.empty());
+      setEntry(obj, "§b", 5, sc(Icons.TIME,     " Zeit ",      time,                   NamedTextColor.WHITE));
+      setEntry(obj, "§c", 4, sc(Icons.KILLS,    " Kills ",     String.valueOf(kills),  NamedTextColor.WHITE));
+      setEntry(obj, "§d", 3, sc(Icons.DEATHS,   " Tode ",      String.valueOf(deaths), NamedTextColor.WHITE));
+      setEntry(obj, "§e", 2, sc(Icons.PLAYTIME, " Spielzeit ", getPlaytime(p),         NamedTextColor.WHITE));
+      setEntry(obj, "§1", 1, Component.empty());
+      setEntry(obj, "§f", 0, sc(Icons.PING,     " Ping ",      p.getPing() + "ms",     pingColor(p.getPing())));
+
       return board;
+   }
+
+   private static Component sc(String icon, String label, String value, NamedTextColor valueColor) {
+      return Component.text(icon, NamedTextColor.WHITE)
+              .append(Component.text(label, NamedTextColor.GRAY).font(SC))
+              .append(Component.text(value, valueColor).font(SC));
+   }
+
+   private static NamedTextColor pingColor(int ping) {
+      if (ping <= 60) return NamedTextColor.GREEN;
+      if (ping <= 150) return NamedTextColor.YELLOW;
+      return NamedTextColor.RED;
+   }
+
+   /** Sets a score entry with a custom Component display name (Paper API). Falls back to legacy string if unavailable. */
+   private static void setEntry(Objective obj, String key, int score, Component display) {
+      Score s = obj.getScore(key);
+      s.setScore(score);
+      try {
+         s.customName(display);
+      } catch (NoSuchMethodError ignored) { }
    }
 
    private static String getPlaytime(Player p) {

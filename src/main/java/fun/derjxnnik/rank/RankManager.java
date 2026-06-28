@@ -2,6 +2,7 @@ package fun.derjxnnik.rank;
 
 import fun.derjxnnik.misc.Colors;
 import fun.derjxnnik.utility.Utility;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -99,7 +100,7 @@ public class RankManager {
 
         if (colors.size() < 2) return LEGACY.deserialize(raw);
 
-        String mm = "<gradient:" + colors.get(0) + ":" + colors.get(1) + ">" + plain + "</gradient>";
+        String mm = "<font:minecraft:small_caps><gradient:" + colors.get(0) + ":" + colors.get(1) + ">" + plain + "</gradient></font>";
         return MiniMessage.miniMessage().deserialize(mm);
     }
 
@@ -112,9 +113,10 @@ public class RankManager {
         if (prefix.equals(Component.empty()))
             return Component.text(player.getName(), NamedTextColor.WHITE);
 
+        Key sc = Key.key("minecraft", "small_caps");
         return prefix
-                .append(Component.text(" | ", NamedTextColor.GRAY))
-                .append(Component.text(player.getName(), NamedTextColor.WHITE));
+                .append(Component.text(" | ", NamedTextColor.GRAY).font(sc))
+                .append(Component.text(player.getName(), NamedTextColor.WHITE).font(sc));
     }
 
     private String getPrimaryGroup(Player player) {

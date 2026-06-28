@@ -4,6 +4,7 @@ import fun.derjxnnik.backpack.BackpackItemManager;
 import fun.derjxnnik.misc.Colors;
 import fun.derjxnnik.misc.Icons;
 import fun.derjxnnik.rank.RankManager;
+import fun.derjxnnik.resourcepack.ResourcePackManager;
 import fun.derjxnnik.utility.Utility;
 import fun.derjxnnik.utility.scoreboard.ScoreboardManager;
 import net.kyori.adventure.text.Component;
@@ -35,6 +36,13 @@ public class JoinListener implements Listener {
       e.setJoinMessage(Colors.GRAY + "[" + Colors.BOLD_GREEN + "+" + Colors.GRAY + "] " + Colors.GREEN + pName);
       ScoreboardManager.set(player);
 
+      ResourcePackManager rp = plugin.getResourcePackManager();
+      if (rp != null && rp.isReady()) {
+         player.setResourcePack(rp.getUrl(), rp.getHash(), true,
+                 Component.text(plugin.getConfig().getString("resource-pack.prompt",
+                         "Bitte akzeptiere das Resource Pack!"), NamedTextColor.YELLOW));
+      }
+
       plugin.getColorManager().loadPlayer(player);
       RankManager rankManager = plugin.getRankManager();
       rankManager.refreshPlayer(player);
@@ -64,11 +72,11 @@ public class JoinListener implements Listener {
       int online = Bukkit.getOnlinePlayers().size();
       int max = Bukkit.getMaxPlayers();
 
-      Component header = Component.text("\n" + Icons.LOGO + "\n", NamedTextColor.WHITE);
+      Component header = Component.text("\n\n" + Icons.LOGO + "\n", NamedTextColor.WHITE);
 
       Component footer = Component.text("\n").append(
               MiniMessage.miniMessage().deserialize(
-                      "<gradient:#00BFFF:#7B68EE>Online Players: " + online + "/" + max + "</gradient>"));
+                      "<font:minecraft:small_caps><gradient:#00BFFF:#7B68EE>Online Players: " + online + "/" + max + "</gradient></font>"));
 
       for (Player p : Bukkit.getOnlinePlayers()) {
          p.sendPlayerListHeaderAndFooter(header, footer);

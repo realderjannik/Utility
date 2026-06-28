@@ -42,6 +42,8 @@ import fun.derjxnnik.listeners.ServerListPingListener;
 import fun.derjxnnik.listeners.SitListener;
 import fun.derjxnnik.listeners.SwitchWorldListener;
 import fun.derjxnnik.rank.RankManager;
+import fun.derjxnnik.resourcepack.ResourcePackListener;
+import fun.derjxnnik.resourcepack.ResourcePackManager;
 import fun.derjxnnik.misc.LogUtil;
 import fun.derjxnnik.settings.SettingsClickListener;
 import fun.derjxnnik.settings.SettingsCommand;
@@ -69,19 +71,16 @@ public final class Utility extends JavaPlugin {
    private LockManager lockManager;
    private RankManager rankManager;
    private ColorManager colorManager;
+   private ResourcePackManager resourcePackManager;
 
    public void onEnable() {
       instance = this;
       LogUtil.init(this);
-      File configFile = new File(this.getDataFolder(), "config.yml");
-      if (!configFile.exists()) {
-         this.saveDefaultConfig();
-         LogUtil.info("Config created for the first time!");
-      } else {
-         LogUtil.info("Using existing config.yml");
-      }
-
+      this.saveDefaultConfig();
+      this.getConfig().options().copyDefaults(true);
+      this.saveConfig();
       this.reloadConfig();
+      saveResourcePackFiles();
       int slots = this.getConfig().getInt("backpack.slots", 54);
       boolean allowShulkers = this.getConfig().getBoolean("backpack.allow-shulkers", false);
       boolean allowAdminEdit = this.getConfig().getBoolean("backpack.allow-admin-edit", true);
@@ -102,6 +101,10 @@ public final class Utility extends JavaPlugin {
       this.lockManager = new LockManager(this);
       this.rankManager = new RankManager();
       this.colorManager = new ColorManager(settingsManager);
+      if (this.getConfig().getBoolean("resource-pack.enabled", true)) {
+         this.resourcePackManager = new ResourcePackManager(this.getDataFolder());
+         this.resourcePackManager.start();
+      }
       if (!this.rankManager.isLuckPermsPresent()) {
          LogUtil.info("[Ranks] LuckPerms nicht gefunden. Prefixe werden nicht angezeigt. Download: https://luckperms.net/download");
       }
@@ -154,6 +157,7 @@ public final class Utility extends JavaPlugin {
       this.getServer().getPluginManager().registerEvents(new ServerListPingListener(), this);
       this.getServer().getPluginManager().registerEvents(new ContainerListener(this, this.lockManager, containerCommand), this);
       this.getServer().getPluginManager().registerEvents(new ChatListener(this.rankManager, this.colorManager, this), this);
+      this.getServer().getPluginManager().registerEvents(new ResourcePackListener(), this);
       (new BukkitRunnable() {
          public void run() {
             ScoreboardManager.updateAll();
@@ -163,9 +167,33 @@ public final class Utility extends JavaPlugin {
       LogUtil.info("Heads loaded: " + this.headsManager.getTotalCount());
    }
 
+   private void saveResourcePackFiles() {
+      String[] files = {
+         "resourcepack/pack.mcmeta",
+         "resourcepack/assets/minecraft/font/default.json",
+         "resourcepack/assets/minecraft/font/small_caps.json",
+         "resourcepack/assets/minecraft/textures/font/icon_time.png",
+         "resourcepack/assets/minecraft/textures/font/icon_kills.png",
+         "resourcepack/assets/minecraft/textures/font/icon_deaths.png",
+         "resourcepack/assets/minecraft/textures/font/icon_playtime.png",
+         "resourcepack/assets/minecraft/textures/font/icon_ping.png",
+         "resourcepack/assets/minecraft/textures/font/small_caps_ascii.png",
+         "resourcepack/assets/minecraft/textures/font/logo.png"
+      };
+      for (String path : files) {
+         File target = new File(getDataFolder(), path);
+         if (!target.exists()) {
+            saveResource(path, false);
+         }
+      }
+   }
+
    public void onDisable() {
       LogUtil.info("Utility is shutting down...");
       this.saveConfig();
+      if (this.resourcePackManager != null) {
+         this.resourcePackManager.stop();
+      }
       if (this.lockManager != null) {
          this.lockManager.saveLocks();
          LogUtil.info("Container locks saved successfully.");
@@ -184,5 +212,9 @@ public final class Utility extends JavaPlugin {
 
    public ColorManager getColorManager() {
       return colorManager;
+   }
+
+   public ResourcePackManager getResourcePackManager() {
+      return resourcePackManager;
    }
 }

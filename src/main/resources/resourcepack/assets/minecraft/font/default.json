@@ -1,0 +1,46 @@
+﻿{
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "minecraft:font/icon_time.png",
+      "height": 9,
+      "ascent": 8,
+      "chars": [""]
+    },
+    {
+      "type": "bitmap",
+      "file": "minecraft:font/icon_kills.png",
+      "height": 9,
+      "ascent": 8,
+      "chars": [""]
+    },
+    {
+      "type": "bitmap",
+      "file": "minecraft:font/icon_deaths.png",
+      "height": 9,
+      "ascent": 8,
+      "chars": [""]
+    },
+    {
+      "type": "bitmap",
+      "file": "minecraft:font/icon_playtime.png",
+      "height": 9,
+      "ascent": 8,
+      "chars": [""]
+    },
+    {
+      "type": "bitmap",
+      "file": "minecraft:font/icon_ping.png",
+      "height": 9,
+      "ascent": 8,
+      "chars": [""]
+    },
+    {
+      "type": "bitmap",
+      "file": "minecraft:font/logo.png",
+      "height": 32,
+      "ascent": 32,
+      "chars": [""]
+    }
+  ]
+}
