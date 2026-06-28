@@ -1,0 +1,46 @@
+backpack:
+  slots: 54
+  allow-shulkers: false
+  allow-admin-edit: true
+
+homes:
+  max-homes: 5
+
+tpa:
+  delay-seconds: 3
+  expire-seconds: 60
+  show-particles: true
+
+server:
+  name: "SMP.DerJxnnik.FUN"
+  website: "DerJxnnik.fun"
+
+ranks:
+  enabled: true
+  show-in-tab: true
+  show-in-chat: true
+  show-in-scoreboard: true
+  show-in-nametag: true
+  # Placeholders: {prefix} {name}
+  tab-format: "{prefix} | {name}"
+  # Placeholders: {prefix} {name} — message is appended automatically
+  chat-format: "{prefix} | {name}"
+  scoreboard-label: "Rang"
+
+use-command:
+  bp: true
+  craft: true
+  day: true
+  ec: true
+  home: true
+  head: true
+  hat: true
+  info: true
+  invsee: true
+  lastdeath: true
+  ping: true
+  playtime: true
+  rename: true
+  spawn: true
+  tpa: true
+  uuid: true

@@ -1,0 +1,214 @@
+name: Utility
+version: '1.6.1'
+main: fun.derjxnnik.utility.Utility
+api-version: '1.21.10'
+softdepend:
+  - HeadDatabase
+  - LuckPerms
+
+
+commands:
+  bp:
+    description: Open your backpack or others'
+    usage: /bp
+    permission: utility.backpack
+    aliases: [backpack]
+
+  ping:
+    description: Show your current ping
+    usage: /ping
+    permission: utility.ping
+    aliases: [ms]
+
+  ec:
+    description: Open your Ender Chest
+    usage: /ec
+    permission: utility.enderchest
+    aliases: [enderchest]
+
+  rename:
+    description: Rename the item in your hand
+    usage: /rename <Item_Name>
+    permission: utility.rename
+
+  craft:
+    description: Open a crafting table
+    usage: /craft
+    permission: utility.craftingtable
+    aliases: [craftingtable, workbench, cr]
+
+  hat:
+    description: Wear the item in your hand as a hat
+    usage: /hat
+    permission: utility.hat
+
+  uuid:
+    description: Show a player's UUID
+    usage: /uuid <player>
+    permission: utility.uuid
+    aliases: [uniqueid]
+
+  lastdeath:
+    description: Show your last death location and cause
+    usage: /lastdeath
+    permission: utility.lastdeath
+    aliases: [death, deathcause]
+
+  spawn:
+    description: Teleport to the world spawn
+    usage: /spawn
+    permission: utility.spawn
+
+  setspawn:
+    description: Set the world spawn to your location
+    usage: /setspawn
+    permission: utility.setspawn
+
+  playtime:
+    description: Show your total playtime
+    usage: /playtime
+    permission: utility.playtime
+    aliases: [pt, spielzeit]
+  day:
+    description: Show the current day
+    usage: /day
+    permission: utility.day
+    aliases: [currentday]
+  invsee:
+    description: Open a players inventory
+    usage: /invsee <player>
+    permission: utility.invsee
+    aliases: [inventory, inventorysee, openinv, openinventory]
+  home:
+    description: Open the HomeGUI
+    usage: /home
+    permission: utility.home
+    aliases: [waypoints, quicktp, qtp]
+  head:
+    description: Opens the head menu or gives a player's head.
+    usage: /head [player]
+  tpa:
+    description: Send a teleport request to another player
+  tpaccept:
+    description: Accept a pending teleport request
+  tpdeny:
+    description: Deny a pending teleport request
+  utility:
+    description: Main Utility command
+    usage: /utility reload
+    aliases: [util]
+  settings:
+    description: Open the Settings Menu
+    usage: /settings
+    aliases: [options, configure]
+  bugreport:
+    description: Create a bugreport
+    aliases: [bug, ifoundabug]
+  color:
+    description: Show available chat colors and formatting
+    usage: /color
+    permission: utility.chat.use
+
+  container:
+    description: Lock a container
+
+permissions:
+  utility.chat.use:
+    description: Access to /color command
+    default: true
+
+  utility.chat.color.*:
+    description: Use all chat colors
+    default: op
+    children:
+      utility.chat.color.black: true
+      utility.chat.color.dark_blue: true
+      utility.chat.color.dark_green: true
+      utility.chat.color.dark_aqua: true
+      utility.chat.color.dark_red: true
+      utility.chat.color.dark_purple: true
+      utility.chat.color.gold: true
+      utility.chat.color.gray: true
+      utility.chat.color.dark_gray: true
+      utility.chat.color.blue: true
+      utility.chat.color.green: true
+      utility.chat.color.aqua: true
+      utility.chat.color.red: true
+      utility.chat.color.light_purple: true
+      utility.chat.color.yellow: true
+      utility.chat.color.white: true
+
+  utility.chat.color.black:
+    description: Use black in chat
+    default: op
+  utility.chat.color.dark_blue:
+    description: Use dark blue in chat
+    default: op
+  utility.chat.color.dark_green:
+    description: Use dark green in chat
+    default: op
+  utility.chat.color.dark_aqua:
+    description: Use dark aqua in chat
+    default: op
+  utility.chat.color.dark_red:
+    description: Use dark red in chat
+    default: op
+  utility.chat.color.dark_purple:
+    description: Use dark purple in chat
+    default: op
+  utility.chat.color.gold:
+    description: Use gold in chat
+    default: op
+  utility.chat.color.gray:
+    description: Use gray in chat
+    default: op
+  utility.chat.color.dark_gray:
+    description: Use dark gray in chat
+    default: op
+  utility.chat.color.blue:
+    description: Use blue in chat
+    default: op
+  utility.chat.color.green:
+    description: Use green in chat
+    default: op
+  utility.chat.color.aqua:
+    description: Use aqua in chat
+    default: op
+  utility.chat.color.red:
+    description: Use red in chat
+    default: op
+  utility.chat.color.light_purple:
+    description: Use light purple in chat
+    default: op
+  utility.chat.color.yellow:
+    description: Use yellow in chat
+    default: op
+  utility.chat.color.white:
+    description: Use white in chat
+    default: op
+
+  utility.chat.format.*:
+    description: Use all chat formatting
+    default: op
+    children:
+      utility.chat.format.bold: true
+      utility.chat.format.italic: true
+      utility.chat.format.underline: true
+      utility.chat.format.obfuscated: true
+      utility.chat.format.strikethrough: true
+
+  utility.chat.format.bold:
+    description: Use bold in chat
+    default: op
+  utility.chat.format.italic:
+    description: Use italic in chat
+    default: op
+  utility.chat.format.underline:
+    description: Use underline in chat
+    default: op
+  utility.chat.format.obfuscated:
+    description: Use obfuscated in chat
+    default: op
+  utility.chat.format.strikethrough:
+    description: Use strikethrough in chat
+    default: op
