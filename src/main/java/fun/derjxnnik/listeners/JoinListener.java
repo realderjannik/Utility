@@ -2,6 +2,7 @@ package fun.derjxnnik.listeners;
 
 import fun.derjxnnik.backpack.BackpackItemManager;
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Icons;
 import fun.derjxnnik.rank.RankManager;
 import fun.derjxnnik.utility.Utility;
 import fun.derjxnnik.utility.scoreboard.ScoreboardManager;
@@ -10,6 +11,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -59,13 +61,17 @@ public class JoinListener implements Listener {
    }
 
    private void updateTablistForAll() {
-      String serverName = plugin.getConfig().getString("server.name", "SMP");
-      String header = Colors.BOLD_DARK_AQUA + serverName + "\n";
-      String footer = "\n " + Colors.DARK_AQUA + "Online Players: " + Colors.YELLOW
-              + Bukkit.getOnlinePlayers().size() + Colors.GRAY + "/" + Colors.YELLOW + Bukkit.getMaxPlayers();
+      int online = Bukkit.getOnlinePlayers().size();
+      int max = Bukkit.getMaxPlayers();
 
-      for (Player online : Bukkit.getOnlinePlayers()) {
-         online.setPlayerListHeaderFooter(header, footer);
+      Component header = Component.text("\n" + Icons.LOGO + "\n", NamedTextColor.WHITE);
+
+      Component footer = Component.text("\n").append(
+              MiniMessage.miniMessage().deserialize(
+                      "<gradient:#00BFFF:#7B68EE>Online Players: " + online + "/" + max + "</gradient>"));
+
+      for (Player p : Bukkit.getOnlinePlayers()) {
+         p.sendPlayerListHeaderAndFooter(header, footer);
       }
    }
 }

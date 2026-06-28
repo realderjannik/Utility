@@ -2,6 +2,9 @@ package fun.derjxnnik.rank;
 
 import fun.derjxnnik.misc.Colors;
 import fun.derjxnnik.utility.Utility;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.event.user.UserDataRecalculateEvent;
@@ -14,6 +17,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.util.List;
 import java.util.UUID;
 
 public class RankManager {
@@ -78,6 +82,46 @@ public class RankManager {
                 .replace("{name}", Colors.WHITE + player.getName());
     }
 
+    public Component buildGradientPrefix(Player player) {
+        if (!luckPermsPresent) return Component.empty();
+        String raw = getPrefix(player);
+        if (raw.isEmpty()) return Component.empty();
+
+        String plain = Colors.strip(raw);
+        if (plain == null || plain.isEmpty()) return Component.empty();
+
+        String group = getPrimaryGroup(player);
+        FileConfiguration config = Utility.getInstance().getConfig();
+
+        List<String> colors = config.getStringList("ranks.gradients." + group + ".colors");
+        if (colors.size() < 2)
+            colors = config.getStringList("ranks.gradients.default.colors");
+
+        if (colors.size() < 2) return LEGACY.deserialize(raw);
+
+        String mm = "<gradient:" + colors.get(0) + ":" + colors.get(1) + ">" + plain + "</gradient>";
+        return MiniMessage.miniMessage().deserialize(mm);
+    }
+
+    public Component buildTabComponent(Player player) {
+        FileConfiguration config = Utility.getInstance().getConfig();
+        if (!isAvailable() || !config.getBoolean("ranks.show-in-tab", true))
+            return Component.text(player.getName(), NamedTextColor.WHITE);
+
+        Component prefix = buildGradientPrefix(player);
+        if (prefix.equals(Component.empty()))
+            return Component.text(player.getName(), NamedTextColor.WHITE);
+
+        return prefix
+                .append(Component.text(" | ", NamedTextColor.GRAY))
+                .append(Component.text(player.getName(), NamedTextColor.WHITE));
+    }
+
+    private String getPrimaryGroup(Player player) {
+        User user = luckPerms.getPlayerAdapter(Player.class).getUser(player);
+        return user.getPrimaryGroup().toLowerCase();
+    }
+
     /** Unique 16-char team name per player, based on UUID. */
     private String getTeamName(Player player) {
         String uuid = player.getUniqueId().toString().replace("-", "");
@@ -98,8 +142,8 @@ public class RankManager {
             return;
         }
 
-        String prefix = getPrefix(target);
-        if (prefix.isEmpty()) {
+        Component prefix = buildGradientPrefix(target);
+        if (prefix.equals(Component.empty())) {
             Team team = board.getTeam(teamName);
             if (team != null) team.removeEntry(target.getName());
             return;
@@ -108,9 +152,7 @@ public class RankManager {
         Team team = board.getTeam(teamName);
         if (team == null) team = board.registerNewTeam(teamName);
 
-        // Prefix ends with Colors.WHITE so the player's name renders in white after it
-        String nametagPrefix = prefix + Colors.GRAY + " | " + Colors.WHITE;
-        team.prefix(LEGACY.deserialize(nametagPrefix));
+        team.prefix(prefix.append(Component.text(" | ", NamedTextColor.GRAY)));
 
         if (!team.hasEntry(target.getName())) {
             team.addEntry(target.getName());
@@ -126,7 +168,7 @@ public class RankManager {
 
     /** Updates tab name + nametag team on every online player's scoreboard. */
     public void refreshPlayer(Player player) {
-        player.playerListName(LEGACY.deserialize(buildTabName(player)));
+        player.playerListName(buildTabComponent(player));
         for (Player observer : Bukkit.getOnlinePlayers()) {
             applyNametagTeam(player, observer.getScoreboard());
         }

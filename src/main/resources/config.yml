@@ -26,6 +26,15 @@ ranks:
   # Placeholders: {prefix} {name} — message is appended automatically
   chat-format: "{prefix} | {name}"
   scoreboard-label: "Rang"
+  # Farbverlauf pro Rang (Key = LuckPerms Gruppenname, lowercase)
+  # "default" wird verwendet wenn kein passender Rang gefunden wird
+  gradients:
+    admin:
+      colors: ["#FF5555", "#AA00AA"]
+    mod:
+      colors: ["#55FF55", "#0055FF"]
+    default:
+      colors: ["#AAAAAA", "#FFFFFF"]
 
 use-command:
   bp: true

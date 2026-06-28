@@ -6,6 +6,7 @@ import fun.derjxnnik.rank.RankManager;
 import fun.derjxnnik.utility.Utility;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
@@ -35,24 +36,27 @@ public class ChatListener implements Listener {
             Component processedMessage = processMessage(
                     PlainTextComponentSerializer.plainText().serialize(message), player);
 
-            String senderPart;
-            if (rankManager.isAvailable() && plugin.getConfig().getBoolean("ranks.show-in-chat", true)) {
-                String prefix = rankManager.getPrefix(player);
-                if (prefix.isEmpty()) {
-                    senderPart = Colors.WHITE + player.getName() + Colors.GRAY + ": ";
+            Component sender;
+            boolean showInChat = rankManager.isAvailable()
+                    && plugin.getConfig().getBoolean("ranks.show-in-chat", true);
+
+            if (showInChat) {
+                Component prefix = rankManager.buildGradientPrefix(player);
+                if (!prefix.equals(Component.empty())) {
+                    sender = prefix
+                            .append(Component.text(" | ", NamedTextColor.GRAY))
+                            .append(Component.text(player.getName(), NamedTextColor.WHITE))
+                            .append(Component.text(": ", NamedTextColor.GRAY));
                 } else {
-                    String format = plugin.getConfig().getString("ranks.chat-format", "{prefix} | {name}");
-                    senderPart = format
-                            .replace("{prefix}", prefix)
-                            .replace(" | ", Colors.GRAY + " | " + Colors.WHITE)
-                            .replace("{name}", Colors.WHITE + player.getName())
-                            + Colors.GRAY + ": ";
+                    sender = Component.text(player.getName(), NamedTextColor.WHITE)
+                            .append(Component.text(": ", NamedTextColor.GRAY));
                 }
             } else {
-                senderPart = Colors.WHITE + player.getName() + Colors.GRAY + ": ";
+                sender = Component.text(player.getName(), NamedTextColor.WHITE)
+                        .append(Component.text(": ", NamedTextColor.GRAY));
             }
 
-            return LEGACY.deserialize(senderPart).append(processedMessage);
+            return sender.append(processedMessage);
         });
     }
 

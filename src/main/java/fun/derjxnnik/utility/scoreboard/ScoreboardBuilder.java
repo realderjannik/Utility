@@ -1,11 +1,13 @@
 package fun.derjxnnik.utility.scoreboard;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Icons;
 import fun.derjxnnik.rank.RankManager;
 import fun.derjxnnik.utility.Utility;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,8 +20,7 @@ public class ScoreboardBuilder {
    public static Scoreboard build(Player p) {
       org.bukkit.scoreboard.ScoreboardManager manager = Bukkit.getScoreboardManager();
       Scoreboard board = manager.getNewScoreboard();
-      String serverName = Utility.getInstance().getConfig().getString("server.name", "SMP");
-      Objective obj = board.registerNewObjective("stats", "dummy", Component.text(Colors.BOLD_DARK_AQUA + serverName));
+      Objective obj = board.registerNewObjective("stats", "dummy", Component.text(Icons.LOGO, NamedTextColor.WHITE));
       obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 
       FileConfiguration config = Utility.getInstance().getConfig();
@@ -44,14 +45,12 @@ public class ScoreboardBuilder {
       int kills = p.getStatistic(Statistic.PLAYER_KILLS);
       int deaths = p.getStatistic(Statistic.DEATHS);
       obj.getScore("").setScore(6);
-      obj.getScore(Colors.DARK_AQUA + "◷ " + Colors.WHITE + "Time " + Colors.DARK_AQUA + time).setScore(5);
-      obj.getScore(Colors.GREEN + "⚔ " + Colors.WHITE + "Kills " + Colors.GREEN + kills).setScore(4);
-      obj.getScore(Colors.RED + "☠ " + Colors.WHITE + "Deaths " + Colors.RED + deaths).setScore(3);
-      String var10001 = Colors.YELLOW;
-      obj.getScore(var10001 + "◷ " + Colors.WHITE + "Playtime " + Colors.YELLOW + getPlaytime(p)).setScore(2);
+      obj.getScore(Colors.WHITE + Icons.TIME     + Colors.DARK_AQUA + " Zeit "     + Colors.WHITE + time).setScore(5);
+      obj.getScore(Colors.WHITE + Icons.KILLS    + Colors.GREEN     + " Kills "    + Colors.WHITE + kills).setScore(4);
+      obj.getScore(Colors.WHITE + Icons.DEATHS   + Colors.RED       + " Tode "     + Colors.WHITE + deaths).setScore(3);
+      obj.getScore(Colors.WHITE + Icons.PLAYTIME + Colors.YELLOW    + " Spielzeit "+ Colors.WHITE + getPlaytime(p)).setScore(2);
       obj.getScore("§1").setScore(1);
-      var10001 = Colors.GRAY;
-      obj.getScore(var10001 + "Ping " + Colors.GREEN + p.getPing() + Colors.GRAY + "ms").setScore(0);
+      obj.getScore(Colors.WHITE + Icons.PING     + Colors.GRAY      + " Ping "     + Colors.GREEN + p.getPing() + Colors.GRAY + "ms").setScore(0);
       return board;
    }
 
