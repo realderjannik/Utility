@@ -1,6 +1,7 @@
 package fun.derjxnnik.commands;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Messages;
 import fun.derjxnnik.utility.Utility;
 import org.bukkit.Location;
 import org.bukkit.Statistic;
@@ -33,10 +34,9 @@ public class LastDeathCommand implements CommandExecutor {
                }
 
                int timeInMinutes = p.getStatistic(Statistic.TIME_SINCE_DEATH) / 20 / 60;
-               p.sendMessage(Colors.PREFIX + Colors.YELLOW + "Last " + Colors.RED + "death " + Colors.YELLOW + "information:\n" + Colors.GREEN + "Death cause: " + Colors.RED + deathCause + Colors.GREEN + "\nTime since: " + Colors.RED + timeInMinutes + " minutes" + Colors.GREEN + "\nX: " + Colors.RED + deathX + Colors.GREEN + "\nY: " + Colors.RED + deathY + Colors.GREEN + "\nZ: " + Colors.RED + deathZ);
+               p.sendMessage(Messages.letzterTodInfo(deathCause, timeInMinutes, deathX, deathY, deathZ));
             } else {
-               String var10001 = Colors.PREFIX;
-               p.sendMessage(var10001 + Colors.RED + p.getDisplayName() + " hasn't died yet.");
+               p.sendMessage(Messages.LETZTER_TOD_NIE_GESTORBEN);
             }
 
             return true;

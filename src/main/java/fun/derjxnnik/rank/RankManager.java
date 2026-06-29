@@ -122,15 +122,37 @@ public class RankManager {
                 .append(Component.text(player.getName(), NamedTextColor.WHITE).font(sc));
     }
 
+    public String getPlayerGroup(Player player) {
+        if (!luckPermsPresent) return "default";
+        return getPrimaryGroup(player);
+    }
+
     private String getPrimaryGroup(Player player) {
         User user = luckPerms.getPlayerAdapter(Player.class).getUser(player);
         return user.getPrimaryGroup().toLowerCase();
     }
 
-    /** Unique 16-char team name per player, based on UUID. */
+    /**
+     * Team name encodes the group's LP weight as an inverted 3-digit sort key,
+     * so Minecraft's alphabetical team sort mirrors LuckPerms weight order.
+     * Higher LP weight → lower sort key → appears first in tab.
+     * Format: r{3-digit-inverted-weight}{12 UUID chars} = 16 chars total.
+     */
     private String getTeamName(Player player) {
         String uuid = player.getUniqueId().toString().replace("-", "");
-        return "rk" + uuid.substring(0, 14);
+        String sortKey = luckPermsPresent ? weightSortKey(player) : "999";
+        return "r" + sortKey + uuid.substring(0, 12);
+    }
+
+    private String weightSortKey(Player player) {
+        try {
+            String groupName = getPrimaryGroup(player);
+            net.luckperms.api.model.group.Group group = luckPerms.getGroupManager().getGroup(groupName);
+            int weight = group != null ? group.getWeight().orElse(0) : 0;
+            return String.format("%03d", Math.max(0, 1000 - weight));
+        } catch (Exception e) {
+            return "999";
+        }
     }
 
     /**
@@ -140,6 +162,13 @@ public class RankManager {
     public void applyNametagTeam(Player target, Scoreboard board) {
         FileConfiguration config = Utility.getInstance().getConfig();
         String teamName = getTeamName(target);
+
+        // Clean up any stale rank team the player may have been in previously
+        for (Team t : board.getTeams()) {
+            if (t.getName().startsWith("r0") && !t.getName().equals(teamName)) {
+                t.removeEntry(target.getName());
+            }
+        }
 
         if (!isAvailable() || !config.getBoolean("ranks.show-in-nametag", true)) {
             Team team = board.getTeam(teamName);

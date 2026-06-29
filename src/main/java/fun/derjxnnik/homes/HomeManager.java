@@ -1,5 +1,7 @@
 package fun.derjxnnik.homes;
 
+import fun.derjxnnik.rank.RankManager;
+import fun.derjxnnik.utility.Utility;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
@@ -56,6 +58,18 @@ public class HomeManager {
 
    public int getMaxHomes() {
       return this.maxHomes;
+   }
+
+   /** Returns the home limit for the given player, respecting rank-based config. -1 = unlimited. */
+   public int getMaxHomes(Player player) {
+      FileConfiguration config = Utility.getInstance().getConfig();
+      RankManager rm = Utility.getInstance().getRankManager();
+      if (rm != null && rm.isAvailable()) {
+         String group = rm.getPlayerGroup(player);
+         int rankLimit = config.getInt("homes.rank-homes." + group, Integer.MIN_VALUE);
+         if (rankLimit != Integer.MIN_VALUE) return rankLimit;
+      }
+      return config.getInt("homes.max-homes", this.maxHomes);
    }
 
    public void setHome(Player p, String home) {

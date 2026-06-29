@@ -1,6 +1,7 @@
 package fun.derjxnnik.commands;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Messages;
 import fun.derjxnnik.utility.Utility;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,8 +18,7 @@ public class PingCommand implements CommandExecutor {
             p.sendMessage(Colors.DISABLED);
             return true;
          } else if (cmd.getName().equalsIgnoreCase("ping")) {
-            String var10001 = Colors.PREFIX;
-            p.sendMessage(var10001 + Colors.YELLOW + "Your ping is: " + Colors.GREEN + p.getPing() + Colors.YELLOW + "ms");
+            p.sendMessage(Messages.pingEigen(p.getPing()));
             return true;
          } else {
             return false;

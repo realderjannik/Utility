@@ -1,6 +1,7 @@
 package fun.derjxnnik.commands;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Messages;
 import fun.derjxnnik.utility.Utility;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,12 +26,12 @@ public class HatCommand implements CommandExecutor {
                ItemStack mainHand = p.getInventory().getItemInMainHand();
                ItemStack helmet = p.getInventory().getHelmet();
                if (mainHand.getType().isAir()) {
-                  p.sendMessage(Colors.PREFIX + Colors.RED + "You must hold an item.");
+                  p.sendMessage(Messages.HAT_KEIN_ITEM);
                   return true;
                } else {
                   p.getInventory().setHelmet(mainHand);
                   p.getInventory().setItemInMainHand(helmet);
-                  p.sendMessage(Colors.PREFIX + Colors.GREEN + "Your hat has been applied.");
+                  p.sendMessage(Messages.HAT_ANGEWENDET);
                   return true;
                }
             }

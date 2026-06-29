@@ -1,6 +1,7 @@
 package fun.derjxnnik.commands;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Messages;
 import fun.derjxnnik.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
@@ -19,20 +20,18 @@ public class PlaytimeCommand implements CommandExecutor {
             p.sendMessage(Colors.DISABLED);
             return true;
          } else if (args.length > 1) {
-            p.sendMessage(Colors.PREFIX + Colors.RED + "Usage: /playtime <player>");
+            p.sendMessage(Messages.SPIELZEIT_NUTZUNG);
             return true;
          } else if (args.length == 0) {
-            String var8 = Colors.PREFIX;
-            p.sendMessage(var8 + Colors.YELLOW + "Your Playtime: " + Colors.GREEN + this.formatPlaytime(p));
+            p.sendMessage(Messages.spielzeitEigen(this.formatPlaytime(p)));
             return true;
          } else {
             Player t = Bukkit.getPlayerExact(args[0]);
             if (t != null && t.isOnline()) {
-               String var10001 = Colors.PREFIX;
-               p.sendMessage(var10001 + Colors.YELLOW + t.getName() + "'s Playtime: " + Colors.GREEN + this.formatPlaytime(t));
+               p.sendMessage(Messages.spielzeitSpieler(t.getName(), this.formatPlaytime(t)));
                return true;
             } else {
-               p.sendMessage(Colors.PREFIX + Colors.RED + "Player is currently offline or has never played");
+               p.sendMessage(Messages.SPIELZEIT_SPIELER_OFFLINE);
                return true;
             }
          }
@@ -44,9 +43,6 @@ public class PlaytimeCommand implements CommandExecutor {
 
    public String formatPlaytime(Player p) {
       int totalMinutes = p.getStatistic(Statistic.PLAY_ONE_MINUTE) / 1200;
-      int days = totalMinutes / 1440;
-      int hours = totalMinutes % 1440 / 60;
-      int minutes = totalMinutes % 60;
-      return days + " days, " + hours + " hours, " + minutes + " minutes";
+      return Messages.formatSpielzeit(totalMinutes);
    }
 }

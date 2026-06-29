@@ -101,4 +101,24 @@ public class SettingsManager {
       config.set("chat-formats", null);
       this.saveConfig(player, config);
    }
+
+   public boolean isMsgEnabled(Player player) {
+      return this.getConfig(player).getBoolean("msg-enabled", true);
+   }
+
+   public void setMsgEnabled(Player player, boolean enabled) {
+      FileConfiguration config = this.getConfig(player);
+      config.set("msg-enabled", enabled);
+      this.saveConfig(player, config);
+   }
+
+   public boolean isShowBalance(Player player) {
+      return this.getConfig(player).getBoolean("show-balance", true);
+   }
+
+   public void setShowBalance(Player player, boolean enabled) {
+      FileConfiguration config = this.getConfig(player);
+      config.set("show-balance", enabled);
+      this.saveConfig(player, config);
+   }
 }

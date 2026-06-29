@@ -1,6 +1,7 @@
 package fun.derjxnnik.commands;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Messages;
 import fun.derjxnnik.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -33,7 +34,7 @@ public class SpawnCommand implements CommandExecutor {
          } else {
             World overworld = Bukkit.getWorlds().stream().filter((w) -> w.getEnvironment() == Environment.NORMAL).findFirst().orElse(null);
             if (overworld == null) {
-               p.sendMessage(Colors.PREFIX + Colors.RED + "Could not find the Overworld!");
+               p.sendMessage(Messages.SPAWN_WELT_NICHT_GEFUNDEN);
                return true;
             } else {
                Location overworldSpawn = overworld.getSpawnLocation();
@@ -43,13 +44,13 @@ public class SpawnCommand implements CommandExecutor {
 
                   public void run() {
                      if (this.counter == 0) {
-                        p.sendActionBar(Colors.GRAY + "Teleporting...");
+                        p.sendActionBar(Messages.SPAWN_TELEPORTIERE);
                         p.teleport(target);
                         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
                         this.cancel();
                      } else {
                         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 1.0F);
-                        p.sendActionBar(Colors.GRAY + "Teleporting in " + Colors.YELLOW + this.counter);
+                        p.sendActionBar(Messages.spawnTeleportireIn(this.counter));
                         SpawnCommand.this.startParticleCircle(p, 3, (double)1.5F, Particle.FIREWORK);
                         --this.counter;
                      }

@@ -1,6 +1,7 @@
 package fun.derjxnnik.commands;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Messages;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -21,7 +22,7 @@ public class SetSpawnCommand implements CommandExecutor {
             p.sendMessage(Colors.NO_PERMS);
             return true;
          } else if (args.length == 0) {
-            Component setClick = ((TextComponent)((TextComponent)Component.text(Colors.PREFIX + "Are you sure you wish to set the spawn here? To confirm, please type ", NamedTextColor.GRAY).append(Component.text("/setspawn confirm", NamedTextColor.YELLOW))).hoverEvent(HoverEvent.showText(Component.text(Colors.YELLOW + "Click to confirm")))).clickEvent(ClickEvent.runCommand("/setspawn confirm"));
+            Component setClick = ((TextComponent)((TextComponent)Component.text(Colors.PREFIX + Messages.SETSPAWN_BESTAETIGEN_TEXT, NamedTextColor.GRAY).append(Component.text(Messages.SETSPAWN_BESTAETIGEN_CMD, NamedTextColor.YELLOW))).hoverEvent(HoverEvent.showText(Component.text(Messages.SETSPAWN_BESTAETIGEN_HOVER)))).clickEvent(ClickEvent.runCommand("/setspawn confirm"));
             p.sendMessage(setClick);
             return true;
          } else if (args.length == 1 && args[0].equalsIgnoreCase("confirm")) {
@@ -32,10 +33,10 @@ public class SetSpawnCommand implements CommandExecutor {
             double z = (double)l.getBlockZ();
             Location newSpawn = new Location(w, x, y, z);
             w.setSpawnLocation(newSpawn);
-            p.sendMessage(Colors.PREFIX + Colors.GREEN + "Successfully set the spawn at your current location.");
+            p.sendMessage(Messages.SETSPAWN_GESETZT);
             return true;
          } else {
-            p.sendMessage(Colors.PREFIX + Colors.RED + "Usage: " + Colors.YELLOW + "/setspawn confirm");
+            p.sendMessage(Messages.SETSPAWN_NUTZUNG);
             return true;
          }
       } else {

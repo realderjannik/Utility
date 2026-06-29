@@ -1,6 +1,7 @@
 package fun.derjxnnik.backpack;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Messages;
 import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -28,7 +29,7 @@ public class BackpackListener implements Listener {
             if (!this.manager.isAllowed(clicked)) {
                e.setCancelled(true);
                p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.0F);
-               p.sendActionBar(Colors.RED + "Shulkerboxes are not allowed to be placed in the backpack.");
+               p.sendActionBar(Messages.BP_SHULKER_VERBOTEN);
             }
 
          }
@@ -42,7 +43,7 @@ public class BackpackListener implements Listener {
          Inventory var4 = e.getInventory();
          if (e.getView().getTitle().toLowerCase().contains("backpack")) {
             this.manager.saveBackpack(p, var4);
-            p.sendActionBar(Colors.GREEN + "Backpack closed!");
+            p.sendActionBar(Messages.BP_GESCHLOSSEN);
             p.playSound(p.getLocation(), Sound.BLOCK_CHEST_CLOSE, 1.0F, 1.0F);
          }
       }

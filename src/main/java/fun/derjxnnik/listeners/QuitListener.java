@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 
 public class QuitListener implements Listener {
+
    private final Utility plugin;
    private final BackpackManager bpManager;
 
@@ -23,24 +24,29 @@ public class QuitListener implements Listener {
    @EventHandler
    public void onPlayerQuit(PlayerQuitEvent e) {
       Player p = e.getPlayer();
-      String var10001 = Colors.GRAY;
-      e.setQuitMessage(var10001 + "[" + Colors.BOLD_RED + "-" + Colors.GRAY + "] " + Colors.RED + p.getName());
+      e.setQuitMessage(Colors.GRAY + "[" + Colors.BOLD_RED + "-" + Colors.GRAY + "] " + Colors.RED + p.getName());
       ScoreboardManager.remove(p);
       Bukkit.getScheduler().runTaskLater(this.plugin, this::updateTablistForAll, 1L);
-      Inventory inv = this.bpManager.getBackpack(p, this.plugin.getConfig().getInt("backpack.slots", 54));
+
+      // Save backpack with the default slot size (cached inventory is used if available)
+      int slots = this.plugin.getConfig().getInt("backpack.slots", 9);
+      Inventory inv = this.bpManager.getBackpack(p, slots);
       this.bpManager.saveBackpack(p, inv);
       this.bpManager.unloadBackpack(p);
+
+      // Clear PM partner tracking
+      if (this.plugin.getMessageManager() != null) {
+         this.plugin.getMessageManager().removePlayer(p.getUniqueId());
+      }
    }
 
    private void updateTablistForAll() {
       String serverName = plugin.getConfig().getString("server.name", "SMP");
       String header = Colors.BOLD_DARK_AQUA + serverName + "\n";
-      String var10000 = Colors.DARK_AQUA;
-      String footer = "\n " + var10000 + "Online Players: " + Colors.YELLOW + Bukkit.getOnlinePlayers().size() + Colors.GRAY + "/" + Colors.YELLOW + Bukkit.getMaxPlayers();
-
-      for(Player online : Bukkit.getOnlinePlayers()) {
+      String footer = "\n " + Colors.DARK_AQUA + "Online Players: " + Colors.YELLOW
+              + Bukkit.getOnlinePlayers().size() + Colors.GRAY + "/" + Colors.YELLOW + Bukkit.getMaxPlayers();
+      for (Player online : Bukkit.getOnlinePlayers()) {
          online.setPlayerListHeaderFooter(header, footer);
       }
-
    }
 }

@@ -1,6 +1,7 @@
 package fun.derjxnnik.commands;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Messages;
 import fun.derjxnnik.utility.Utility;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -23,7 +24,7 @@ public class RenameCommand implements CommandExecutor {
             p.sendMessage(Colors.NO_PERMS);
             return true;
          } else if (args.length == 0) {
-            sender.sendMessage(Colors.PREFIX + Colors.RED + "Usage: /rename <Item_Name>");
+            sender.sendMessage(Messages.RENAME_NUTZUNG);
             return true;
          } else {
             ItemStack active = p.getInventory().getItemInMainHand();
@@ -34,18 +35,18 @@ public class RenameCommand implements CommandExecutor {
                if (meta != null) {
                   meta.setDisplayName(name);
                   active.setItemMeta(meta);
-                  p.sendMessage(Colors.PREFIX + Colors.GREEN + "Renamed your item to: " + Colors.RESET + name);
+                  p.sendMessage(Messages.renameErfolgreich(name));
                   return true;
                } else {
                   return true;
                }
             } else {
-               sender.sendMessage(Colors.PREFIX + Colors.RED + "You must hold an item to rename it.");
+               sender.sendMessage(Messages.RENAME_KEIN_ITEM);
                return true;
             }
          }
       } else {
-         sender.sendMessage("Only players can use this command.");
+         sender.sendMessage(Colors.CONSOLE_SENDER);
          return true;
       }
    }

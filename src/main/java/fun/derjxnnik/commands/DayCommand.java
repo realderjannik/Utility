@@ -1,6 +1,7 @@
 package fun.derjxnnik.commands;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Messages;
 import fun.derjxnnik.misc.TimeLabel;
 import fun.derjxnnik.utility.Utility;
 import org.bukkit.World;
@@ -21,8 +22,7 @@ public class DayCommand implements CommandExecutor {
          } else {
             World w = p.getWorld();
             long day = w.getFullTime() / 24000L;
-            String var10001 = Colors.PREFIX;
-            p.sendMessage(var10001 + Colors.GRAY + "Current day: " + Colors.YELLOW + day + Colors.GRAY + "\n" + Colors.PREFIX + Colors.GRAY + "Current time: " + Colors.YELLOW + w.getTime() + " (" + this.currentTime(w) + ")");
+            p.sendMessage(Messages.tagAnzeige(day, w.getTime(), this.currentTime(w)));
             return true;
          }
       } else {

@@ -1,6 +1,6 @@
 package fun.derjxnnik.commands;
 
-import fun.derjxnnik.currency.CurrencyManager;
+import fun.derjxnnik.messages.MessageManager;
 import fun.derjxnnik.misc.Messages;
 import fun.derjxnnik.settings.SettingsManager;
 import org.bukkit.Bukkit;
@@ -11,16 +11,17 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CoinsCommand implements CommandExecutor, TabCompleter {
+public class MsgCommand implements CommandExecutor, TabCompleter {
 
-    private final CurrencyManager currency;
+    private final MessageManager messageManager;
     private final SettingsManager settingsManager;
 
-    public CoinsCommand(CurrencyManager currency, SettingsManager settingsManager) {
-        this.currency = currency;
+    public MsgCommand(MessageManager messageManager, SettingsManager settingsManager) {
+        this.messageManager = messageManager;
         this.settingsManager = settingsManager;
     }
 
@@ -31,25 +32,33 @@ public class CoinsCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(Messages.NUR_SPIELER);
             return true;
         }
-
-        if (args.length >= 1) {
-            Player target = Bukkit.getPlayerExact(args[0]);
-            if (target == null || !target.isOnline()) {
-                p.sendMessage(Messages.SPIELER_OFFLINE);
-                return true;
-            }
-            // Privacy check — mods/admins bypass via permission
-            if (!settingsManager.isShowBalance(target) && !p.hasPermission("utility.coins.others")) {
-                p.sendMessage(Messages.COINS_PRIVAT);
-                return true;
-            }
-            long balance = currency.getBalance(target.getUniqueId());
-            p.sendMessage(Messages.coinsSpieler(target.getName(), balance));
+        if (args.length < 2) {
+            p.sendMessage(Messages.MSG_NUTZUNG);
+            return true;
+        }
+        if (!settingsManager.isMsgEnabled(p)) {
+            p.sendMessage(Messages.MSG_SELBST_DEAKTIVIERT);
             return true;
         }
 
-        long balance = currency.getBalance(p.getUniqueId());
-        p.sendMessage(Messages.coinsEigen(balance));
+        Player target = Bukkit.getPlayerExact(args[0]);
+        if (target == null || !target.isOnline()) {
+            p.sendMessage(Messages.MSG_EMPFAENGER_OFFLINE);
+            return true;
+        }
+        if (target.equals(p)) {
+            p.sendMessage(Messages.MSG_SELBST);
+            return true;
+        }
+        if (!settingsManager.isMsgEnabled(target)) {
+            p.sendMessage(Messages.MSG_DEAKTIVIERT);
+            return true;
+        }
+
+        String nachricht = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+        p.sendMessage(Messages.msgGesendet(target.getName(), nachricht));
+        target.sendMessage(Messages.msgErhalten(p.getName(), nachricht));
+        messageManager.setLastPartner(p, target);
         return true;
     }
 

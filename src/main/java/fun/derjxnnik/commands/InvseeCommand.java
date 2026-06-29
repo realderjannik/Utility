@@ -1,6 +1,7 @@
 package fun.derjxnnik.commands;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Messages;
 import fun.derjxnnik.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -19,12 +20,12 @@ public class InvseeCommand implements CommandExecutor {
             p.sendMessage(Colors.DISABLED);
             return true;
          } else if (args.length != 1) {
-            p.sendMessage(Colors.PREFIX + Colors.RED + "Usage: /invsee <player>");
+            p.sendMessage(Messages.INVSEE_NUTZUNG);
             return true;
          } else {
             Player t = Bukkit.getPlayerExact(args[0]);
             if (t == null) {
-               p.sendMessage(Colors.PREFIX + Colors.RED + "Player is currently offline or has never played");
+               p.sendMessage(Messages.INVSEE_SPIELER_OFFLINE);
                return true;
             } else {
                Inventory inv = t.getInventory();

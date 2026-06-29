@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class SettingsCommand implements CommandExecutor {
+
    private final SettingsManager settings;
 
    public SettingsCommand(SettingsManager settings) {
@@ -22,38 +23,60 @@ public class SettingsCommand implements CommandExecutor {
    }
 
    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-      if (sender instanceof Player p) {
-         Inventory gui = Bukkit.createInventory((InventoryHolder)null, 9, "§8Your Settings");
-         boolean sitEnabled = this.settings.isSittingEnabled(p);
-         ItemStack sitItem = new ItemStack(Material.OAK_STAIRS);
-         ItemMeta sitMeta = sitItem.getItemMeta();
-         sitMeta.setDisplayName("§eSitting: " + (sitEnabled ? "§aON" : "§cOFF"));
-         sitMeta.setLore(Arrays.asList("§7Click to " + (sitEnabled ? "§cdisable " : "§aenable ") + "§7sitting"));
-         sitItem.setItemMeta(sitMeta);
-         gui.setItem(2, sitItem);
-         boolean bpEnabled = this.settings.hasBackpackEnabled(p);
-         ItemStack bpItem = new ItemStack(Material.BUNDLE);
-         ItemMeta bpMeta = bpItem.getItemMeta();
-         bpMeta.setDisplayName("§eBackpack Item: " + (bpEnabled ? "§aON" : "§cOFF"));
-         bpMeta.setLore(Arrays.asList("§7Click to " + (bpEnabled ? "§cdisable " : "§aenable ") + "§7the Backpack Item", "§7in your Inventory"));
-         bpItem.setItemMeta(bpMeta);
-         gui.setItem(4, bpItem);
-         ItemStack colorItem = new ItemStack(Material.BLUE_DYE);
-         ItemMeta colorMeta = colorItem.getItemMeta();
-         colorMeta.setDisplayName("§eBackpack Color");
-         String[] var10001 = new String[2];
-         String var10004 = this.settings.getBackpackColor(p);
-         var10001[0] = "§7Current: §f" + var10004;
-         var10001[1] = "§7Click to change";
-         colorMeta.setLore(Arrays.asList(var10001));
-         colorItem.setItemMeta(colorMeta);
-         gui.setItem(6, colorItem);
-         p.openInventory(gui);
-         p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
-         return true;
-      } else {
+      if (!(sender instanceof Player p)) {
          sender.sendMessage(Colors.CONSOLE_SENDER);
          return true;
       }
+
+      Inventory gui = Bukkit.createInventory((InventoryHolder) null, 9, "§8Einstellungen");
+
+      // Slot 0 – Private Nachrichten
+      boolean msgEnabled = settings.isMsgEnabled(p);
+      ItemStack msgItem = new ItemStack(Material.PAPER);
+      ItemMeta msgMeta = msgItem.getItemMeta();
+      msgMeta.setDisplayName("§ePrivate Nachrichten: " + (msgEnabled ? "§aAN" : "§cAUS"));
+      msgMeta.setLore(Arrays.asList("§7Klicke, um private Nachrichten zu " + (msgEnabled ? "§cdeaktivieren" : "§aaktivieren")));
+      msgItem.setItemMeta(msgMeta);
+      gui.setItem(0, msgItem);
+
+      // Slot 2 – Sitzen
+      boolean sitEnabled = settings.isSittingEnabled(p);
+      ItemStack sitItem = new ItemStack(Material.OAK_STAIRS);
+      ItemMeta sitMeta = sitItem.getItemMeta();
+      sitMeta.setDisplayName("§eSitzen: " + (sitEnabled ? "§aAN" : "§cAUS"));
+      sitMeta.setLore(Arrays.asList("§7Klicke, um das Sitzen zu " + (sitEnabled ? "§cdeaktivieren" : "§aaktivieren")));
+      sitItem.setItemMeta(sitMeta);
+      gui.setItem(2, sitItem);
+
+      // Slot 4 – Rucksack-Item
+      boolean bpEnabled = settings.hasBackpackEnabled(p);
+      ItemStack bpItem = new ItemStack(Material.BUNDLE);
+      ItemMeta bpMeta = bpItem.getItemMeta();
+      bpMeta.setDisplayName("§eRucksack-Item: " + (bpEnabled ? "§aAN" : "§cAUS"));
+      bpMeta.setLore(Arrays.asList("§7Klicke, um das Rucksack-Item zu " + (bpEnabled ? "§cdeaktivieren" : "§aaktivieren")));
+      bpItem.setItemMeta(bpMeta);
+      gui.setItem(4, bpItem);
+
+      // Slot 6 – Rucksack-Farbe
+      ItemStack colorItem = new ItemStack(Material.BLUE_DYE);
+      ItemMeta colorMeta = colorItem.getItemMeta();
+      colorMeta.setDisplayName("§eRucksack-Farbe");
+      colorMeta.setLore(Arrays.asList("§7Aktuell: §f" + settings.getBackpackColor(p), "§7Klicke zum Ändern"));
+      colorItem.setItemMeta(colorMeta);
+      gui.setItem(6, colorItem);
+
+      // Slot 8 – Guthaben anzeigen
+      boolean showBalance = settings.isShowBalance(p);
+      ItemStack balItem = new ItemStack(Material.GOLD_INGOT);
+      ItemMeta balMeta = balItem.getItemMeta();
+      balMeta.setDisplayName("§eGuthaben anzeigen: " + (showBalance ? "§aAN" : "§cAUS"));
+      balMeta.setLore(Arrays.asList("§7Legt fest, ob andere Spieler",
+              "§7dein Guthaben sehen dürfen."));
+      balItem.setItemMeta(balMeta);
+      gui.setItem(8, balItem);
+
+      p.openInventory(gui);
+      p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+      return true;
    }
 }

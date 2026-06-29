@@ -4,11 +4,16 @@ import fun.derjxnnik.backpack.BackpackItemListener;
 import fun.derjxnnik.backpack.BackpackItemManager;
 import fun.derjxnnik.backpack.BackpackListener;
 import fun.derjxnnik.backpack.BackpackManager;
+import fun.derjxnnik.ban.BanManager;
 import fun.derjxnnik.commands.BackpackCommand;
+import fun.derjxnnik.commands.BanCommand;
 import fun.derjxnnik.commands.BugreportCommand;
 import fun.derjxnnik.commands.CoinsCommand;
+import fun.derjxnnik.commands.MsgCommand;
 import fun.derjxnnik.commands.PayCommand;
 import fun.derjxnnik.commands.PaymentsCommand;
+import fun.derjxnnik.commands.ReplyCommand;
+import fun.derjxnnik.commands.UnbanCommand;
 import fun.derjxnnik.currency.CurrencyManager;
 import fun.derjxnnik.chat.ColorManager;
 import fun.derjxnnik.commands.ColorCommand;
@@ -36,6 +41,7 @@ import fun.derjxnnik.heads.HeadsManager;
 import fun.derjxnnik.homes.ChatInputListener;
 import fun.derjxnnik.homes.HomeClickListener;
 import fun.derjxnnik.homes.HomeManager;
+import fun.derjxnnik.listeners.BanLoginListener;
 import fun.derjxnnik.listeners.ChatListener;
 import fun.derjxnnik.listeners.DeathListener;
 import fun.derjxnnik.listeners.EnderChestListener;
@@ -45,6 +51,7 @@ import fun.derjxnnik.listeners.QuitListener;
 import fun.derjxnnik.listeners.ServerListPingListener;
 import fun.derjxnnik.listeners.SitListener;
 import fun.derjxnnik.listeners.SwitchWorldListener;
+import fun.derjxnnik.messages.MessageManager;
 import fun.derjxnnik.rank.RankManager;
 import fun.derjxnnik.resourcepack.ResourcePackListener;
 import fun.derjxnnik.resourcepack.ResourcePackManager;
@@ -70,6 +77,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public final class Utility extends JavaPlugin {
+
    private static Utility instance;
    private HeadsManager headsManager;
    private LockManager lockManager;
@@ -77,6 +85,9 @@ public final class Utility extends JavaPlugin {
    private ColorManager colorManager;
    private ResourcePackManager resourcePackManager;
    private CurrencyManager currencyManager;
+   private SettingsManager settingsManager;
+   private BanManager banManager;
+   private MessageManager messageManager;
 
    public void onEnable() {
       instance = this;
@@ -86,27 +97,34 @@ public final class Utility extends JavaPlugin {
       this.saveConfig();
       this.reloadConfig();
       saveResourcePackFiles();
-      int slots = this.getConfig().getInt("backpack.slots", 54);
+
       boolean allowShulkers = this.getConfig().getBoolean("backpack.allow-shulkers", false);
       boolean allowAdminEdit = this.getConfig().getBoolean("backpack.allow-admin-edit", true);
-      int maxHomes = this.getConfig().getInt("homes.max-homes", 5);
+      int maxHomes = this.getConfig().getInt("homes.max-homes", 3);
+
       BackpackManager backpackManager = new BackpackManager(this.getDataFolder(), allowShulkers);
       HomeManager homeManager = new HomeManager(this.getDataFolder(), maxHomes);
-      ChatInputListener chatListener = new ChatInputListener(homeManager, maxHomes);
+
+      this.settingsManager = new SettingsManager(this.getDataFolder());
+      this.banManager = new BanManager(this.getDataFolder());
+      this.messageManager = new MessageManager();
+
+      ChatInputListener chatListener = new ChatInputListener(homeManager);
       HomeClickListener homeClickListener = new HomeClickListener(homeManager, chatListener);
+
       File headsFile = new File(this.getDataFolder(), "heads.yml");
       if (!headsFile.exists()) {
          this.saveResource("heads.yml", false);
       }
 
       this.headsManager = new HeadsManager(this.getDataFolder());
-      SettingsManager settingsManager = new SettingsManager(this.getDataFolder());
       BackpackItemManager backpackItemManager = new BackpackItemManager(this, settingsManager);
       TPAManager tpaManager = new TPAManager(this);
       this.lockManager = new LockManager(this);
       this.rankManager = new RankManager();
       this.colorManager = new ColorManager(settingsManager);
       this.currencyManager = new CurrencyManager(this.getDataFolder());
+
       if (this.getConfig().getBoolean("resource-pack.enabled", true)) {
          this.resourcePackManager = new ResourcePackManager(this.getDataFolder());
          this.resourcePackManager.start();
@@ -114,7 +132,9 @@ public final class Utility extends JavaPlugin {
       if (!this.rankManager.isLuckPermsPresent()) {
          LogUtil.info("[Ranks] LuckPerms nicht gefunden. Prefixe werden nicht angezeigt. Download: https://luckperms.net/download");
       }
-      this.getCommand("backpack").setExecutor(new BackpackCommand(backpackManager, slots));
+
+      // Commands
+      this.getCommand("backpack").setExecutor(new BackpackCommand(backpackManager));
       this.getCommand("ping").setExecutor(new PingCommand());
       this.getCommand("ec").setExecutor(new EnderChestCommand());
       this.getCommand("rename").setExecutor(new RenameCommand());
@@ -137,13 +157,34 @@ public final class Utility extends JavaPlugin {
       this.getCommand("bugreport").setExecutor(new BugreportCommand());
       this.getCommand("color").setExecutor(new ColorCommand(this.colorManager));
       this.getCommand("color").setTabCompleter(new ColorTabCompleter());
+
       PayCommand payCommand = new PayCommand(this.currencyManager);
       this.getCommand("pay").setExecutor(payCommand);
       this.getCommand("pay").setTabCompleter(payCommand);
-      this.getCommand("coins").setExecutor(new CoinsCommand(this.currencyManager));
+
+      CoinsCommand coinsCommand = new CoinsCommand(this.currencyManager, this.settingsManager);
+      this.getCommand("coins").setExecutor(coinsCommand);
+      this.getCommand("coins").setTabCompleter(coinsCommand);
+
       this.getCommand("payments").setExecutor(new PaymentsCommand(this.currencyManager));
+
+      MsgCommand msgCommand = new MsgCommand(this.messageManager, this.settingsManager);
+      this.getCommand("msg").setExecutor(msgCommand);
+      this.getCommand("msg").setTabCompleter(msgCommand);
+      this.getCommand("r").setExecutor(new ReplyCommand(this.messageManager, this.settingsManager));
+
+      BanCommand banCommand = new BanCommand(this.banManager);
+      this.getCommand("ban").setExecutor(banCommand);
+      this.getCommand("ban").setTabCompleter(banCommand);
+
+      UnbanCommand unbanCommand = new UnbanCommand(this.banManager);
+      this.getCommand("unban").setExecutor(unbanCommand);
+      this.getCommand("unban").setTabCompleter(unbanCommand);
+
       ContainerCommand containerCommand = new ContainerCommand(this.lockManager);
       this.getCommand("container").setExecutor(containerCommand);
+
+      // Tab completers
       this.getCommand("backpack").setTabCompleter(new BackpackTabCompleter());
       this.getCommand("setspawn").setTabCompleter(new SetSpawnTabCompleter());
       this.getCommand("invsee").setTabCompleter(new InvseeTabCompleter());
@@ -152,6 +193,8 @@ public final class Utility extends JavaPlugin {
       this.getCommand("ec").setTabCompleter(new EnderChestTabCompleter());
       this.getCommand("container").setTabCompleter(new ContainerTabCompleter());
       this.getCommand("tpa").setTabCompleter(new TPATabCompleter());
+
+      // Listeners
       this.getServer().getPluginManager().registerEvents(new BackpackListener(backpackManager), this);
       this.getServer().getPluginManager().registerEvents(new JoinListener(this, backpackItemManager), this);
       this.getServer().getPluginManager().registerEvents(new QuitListener(this, backpackManager), this);
@@ -169,11 +212,14 @@ public final class Utility extends JavaPlugin {
       this.getServer().getPluginManager().registerEvents(new ContainerListener(this, this.lockManager, containerCommand), this);
       this.getServer().getPluginManager().registerEvents(new ChatListener(this.rankManager, this.colorManager, this), this);
       this.getServer().getPluginManager().registerEvents(new ResourcePackListener(), this);
+      this.getServer().getPluginManager().registerEvents(new BanLoginListener(this.banManager), this);
+
       (new BukkitRunnable() {
          public void run() {
             ScoreboardManager.updateAll();
          }
       }).runTaskTimer(this, 20L, 20L);
+
       LogUtil.info("Utility enabled successfully!");
       LogUtil.info("Heads loaded: " + this.headsManager.getTotalCount());
    }
@@ -216,27 +262,15 @@ public final class Utility extends JavaPlugin {
          this.lockManager.saveLocks();
          LogUtil.info("Container locks saved successfully.");
       }
-
       LogUtil.info("Utility has been disabled!");
    }
 
-   public static Utility getInstance() {
-      return instance;
-   }
-
-   public RankManager getRankManager() {
-      return rankManager;
-   }
-
-   public ColorManager getColorManager() {
-      return colorManager;
-   }
-
-   public ResourcePackManager getResourcePackManager() {
-      return resourcePackManager;
-   }
-
-   public CurrencyManager getCurrencyManager() {
-      return currencyManager;
-   }
+   public static Utility getInstance()            { return instance; }
+   public RankManager getRankManager()            { return rankManager; }
+   public ColorManager getColorManager()          { return colorManager; }
+   public ResourcePackManager getResourcePackManager() { return resourcePackManager; }
+   public CurrencyManager getCurrencyManager()    { return currencyManager; }
+   public SettingsManager getSettingsManager()    { return settingsManager; }
+   public BanManager getBanManager()              { return banManager; }
+   public MessageManager getMessageManager()      { return messageManager; }
 }

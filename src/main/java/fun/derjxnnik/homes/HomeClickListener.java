@@ -1,6 +1,7 @@
 package fun.derjxnnik.homes;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -91,7 +92,7 @@ public class HomeClickListener implements Listener {
       FileConfiguration config = this.homeManager.getPlayerFile(player);
       String path = "homes." + homeName;
       if (!config.contains(path)) {
-         player.sendMessage(Colors.PREFIX + Colors.RED + "That home doesn't exist!");
+         player.sendMessage(Messages.HOME_NICHT_GEFUNDEN);
          player.closeInventory();
       } else {
          String world = config.getString(path + ".world");
@@ -101,11 +102,11 @@ public class HomeClickListener implements Listener {
          float yaw = (float)config.getDouble(path + ".yaw");
          float pitch = (float)config.getDouble(path + ".pitch");
          if (Bukkit.getWorld(world) == null) {
-            player.sendMessage(Colors.PREFIX + Colors.RED + "World not found!");
+            player.sendMessage(Messages.HOME_WELT_NICHT_GEFUNDEN);
          } else {
             Location loc = new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
             player.teleport(loc);
-            player.sendMessage(Colors.PREFIX + Colors.GRAY + "Teleported to home " + Colors.DARK_AQUA + homeName + Colors.GRAY + ".");
+            player.sendMessage(Messages.homeTeleportiert(homeName));
             player.closeInventory();
          }
       }
@@ -120,15 +121,15 @@ public class HomeClickListener implements Listener {
       String homeName = ChatColor.stripColor(rawTitle).replaceFirst("^Delete\\s+", "").replace("?", "").trim();
       if (clicked.getType() == Material.BARRIER) {
          player.closeInventory();
-         player.sendMessage(Colors.PREFIX + Colors.GRAY + "Deletion cancelled.");
+         player.sendMessage(Messages.HOME_LOESCHEN_ABGEBROCHEN);
       } else {
          if (clicked.getType() == Material.EMERALD_BLOCK) {
             boolean success = this.homeManager.deleteHome(player, homeName);
             player.closeInventory();
             if (success) {
-               player.sendMessage(Colors.PREFIX + Colors.GRAY + "Home '" + Colors.YELLOW + homeName + Colors.GRAY + "' deleted.");
+               player.sendMessage(Messages.homeGeloescht(homeName));
             } else {
-               player.sendMessage(Colors.PREFIX + Colors.RED + "Could not delete home '" + Colors.YELLOW + homeName + Colors.RED + "'.");
+               player.sendMessage(Messages.homeLoeschenFehler(homeName));
             }
 
             (new HomeListGUI(this.homeManager, true)).open(player);

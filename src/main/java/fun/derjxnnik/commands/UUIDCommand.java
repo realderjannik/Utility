@@ -1,6 +1,7 @@
 package fun.derjxnnik.commands;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Messages;
 import fun.derjxnnik.utility.Utility;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -24,22 +25,22 @@ public class UUIDCommand implements CommandExecutor {
             p.sendMessage(Colors.DISABLED);
             return true;
          } else if (args.length == 0) {
-            Component uuidMsgPlayer = ((TextComponent)Component.text(Colors.PREFIX + Colors.GREEN + p.getName() + "'s UUID: ", NamedTextColor.GRAY).append(Component.text(p.getUniqueId().toString(), NamedTextColor.WHITE).hoverEvent(HoverEvent.showText(Component.text("Click to copy"))))).clickEvent(ClickEvent.copyToClipboard(p.getUniqueId().toString()));
+            Component uuidMsgPlayer = ((TextComponent)Component.text(Colors.PREFIX + Colors.GREEN + p.getName() + "'s UUID: ", NamedTextColor.GRAY).append(Component.text(p.getUniqueId().toString(), NamedTextColor.WHITE).hoverEvent(HoverEvent.showText(Component.text(Messages.UUID_KOPIEREN_HOVER))))).clickEvent(ClickEvent.copyToClipboard(p.getUniqueId().toString()));
             p.sendMessage(uuidMsgPlayer);
             return true;
          } else if (args.length == 1) {
             OfflinePlayer t = Bukkit.getOfflinePlayer(args[0]);
             if (t.getName() != null) {
-               Component uuidMsgTarget = ((TextComponent)Component.text(Colors.PREFIX + Colors.GREEN + t.getName() + "'s UUID: ", NamedTextColor.GRAY).append(Component.text(t.getUniqueId().toString(), NamedTextColor.WHITE).hoverEvent(HoverEvent.showText(Component.text("Click to copy"))))).clickEvent(ClickEvent.copyToClipboard(t.getUniqueId().toString()));
+               Component uuidMsgTarget = ((TextComponent)Component.text(Colors.PREFIX + Colors.GREEN + t.getName() + "'s UUID: ", NamedTextColor.GRAY).append(Component.text(t.getUniqueId().toString(), NamedTextColor.WHITE).hoverEvent(HoverEvent.showText(Component.text(Messages.UUID_KOPIEREN_HOVER))))).clickEvent(ClickEvent.copyToClipboard(t.getUniqueId().toString()));
                p.sendMessage(uuidMsgTarget);
             } else {
-               sender.sendMessage(Colors.PREFIX + Colors.RED + "Player not found");
+               sender.sendMessage(Messages.UUID_NICHT_GEFUNDEN);
             }
 
             return true;
          } else {
             if (args.length > 2) {
-               sender.sendMessage(Colors.PREFIX + Colors.RED + "Usage: /uuid <player>");
+               sender.sendMessage(Messages.UUID_NUTZUNG);
             }
 
             return true;

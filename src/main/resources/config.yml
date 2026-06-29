@@ -8,12 +8,36 @@ resource-pack:
   prompt: "Bitte akzeptiere das Resource Pack!"
 
 backpack:
-  slots: 54
+  # Standard-Slot-Anzahl als Fallback (falls kein Rang zutrifft)
+  slots: 9
   allow-shulkers: false
   allow-admin-edit: true
+  # Slots pro Rang (LuckPerms-Gruppenname, lowercase). -1 = deaktiviert für diesen Rang.
+  rank-slots:
+    admin: 54
+    a-moderator: 54
+    d-moderator: 36
+    streamer: 27
+    a-vip: 27
+    d-vip: 27
+    a-subscriber: 18
+    d-subscriber: 18
+    default: 9
 
 homes:
-  max-homes: 5
+  # Standard-Limit als Fallback
+  max-homes: 3
+  # Limit pro Rang. -1 = unbegrenzt.
+  rank-homes:
+    admin: -1
+    a-moderator: -1
+    d-moderator: 10
+    streamer: 7
+    a-vip: 5
+    d-vip: 5
+    a-subscriber: 4
+    d-subscriber: 4
+    default: 3
 
 tpa:
   delay-seconds: 3

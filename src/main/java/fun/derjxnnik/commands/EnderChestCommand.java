@@ -1,6 +1,7 @@
 package fun.derjxnnik.commands;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Messages;
 import fun.derjxnnik.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -19,7 +20,7 @@ public class EnderChestCommand implements CommandExecutor {
             p.sendMessage(Colors.DISABLED);
             return true;
          } else if (args.length > 1) {
-            p.sendMessage(Colors.PREFIX + Colors.RED + "Usage: /ec <player>");
+            p.sendMessage(Messages.EC_NUTZUNG);
             return true;
          } else if (args.length == 0) {
             Inventory pEnder = p.getEnderChest();
@@ -28,7 +29,7 @@ public class EnderChestCommand implements CommandExecutor {
          } else {
             Player t = Bukkit.getPlayerExact(args[0]);
             if (t == null) {
-               p.sendMessage(Colors.PREFIX + Colors.RED + "Player is currently offline or has never played");
+               p.sendMessage(Messages.EC_SPIELER_OFFLINE);
                return true;
             } else {
                Inventory tEnder = t.getEnderChest();

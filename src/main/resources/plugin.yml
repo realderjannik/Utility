@@ -113,21 +113,49 @@ commands:
     description: Lock a container
 
   coins:
-    description: Show your current coin balance
-    usage: /coins
+    description: Zeigt den Kontostand an
+    usage: /coins [Spieler]
     aliases: [balance, bal, guthaben]
 
   pay:
-    description: Transfer coins to another player
-    usage: /pay <player> <amount>
+    description: Coins an einen Spieler überweisen
+    usage: /pay <Spieler> <Betrag>
     aliases: [transfer, überweisen]
 
   payments:
-    description: Show your payment history
+    description: Zahlungshistorie anzeigen
     usage: /payments
     aliases: [transaktionen, transactions]
 
+  msg:
+    description: Private Nachricht an einen Spieler senden
+    usage: /msg <Spieler> <Nachricht>
+    aliases: [whisper, w, tell, dm]
+
+  r:
+    description: Auf die letzte private Nachricht antworten
+    usage: /r <Nachricht>
+    aliases: [reply, antworten]
+
+  ban:
+    description: Einen Spieler bannen
+    usage: /ban <Spieler> <Grund> [Zeit]
+    permission: utility.ban
+
+  unban:
+    description: Einen Spieler entbannen
+    usage: /unban <Spieler>
+    permission: utility.ban
+
 permissions:
+  utility.ban:
+    description: Spieler bannen und entbannen
+    default: op
+
+  utility.coins.others:
+    description: Kontostand anderer Spieler immer sehen (ignoriert Privat-Einstellung)
+    default: op
+
   utility.chat.use:
     description: Access to /color command
     default: true
