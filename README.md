@@ -55,11 +55,10 @@ Each player has a personal backpack that persists across sessions. The number of
 | Rank (example) | Slots |
 |---|---|
 | `admin` | 54 |
-| `a-moderator` | 54 |
-| `d-moderator` | 36 |
+| `moderator` | 36 |
 | `streamer` | 27 |
-| `a-vip` / `d-vip` | 27 |
-| `a-subscriber` / `d-subscriber` | 18 |
+| `vip` | 27 |
+| `subscriber` | 18 |
 | `default` | 9 |
 
 > Slot counts and group names are fully configurable in `config.yml` under `backpack.rank-slots`.
@@ -71,11 +70,11 @@ Players can save named home locations and teleport to them through a GUI. The ma
 
 | Rank (example) | Max Homes |
 |---|---|
-| `admin` / `a-moderator` | Unlimited |
-| `d-moderator` | 10 |
+| `admin` | Unlimited |
+| `moderator` | 10 |
 | `streamer` | 7 |
-| `a-vip` / `d-vip` | 5 |
-| `a-subscriber` / `d-subscriber` | 4 |
+| `vip` | 5 |
+| `subscriber` | 4 |
 | `default` | 3 |
 
 > `-1` in the config means unlimited. All values are configurable under `homes.rank-homes`.
@@ -330,11 +329,10 @@ Jeder Spieler hat einen persönlichen Rucksack, der sitzungsübergreifend gespei
 | Rang (Beispiel) | Slots |
 |---|---|
 | `admin` | 54 |
-| `a-moderator` | 54 |
-| `d-moderator` | 36 |
+| `moderator` | 36 |
 | `streamer` | 27 |
-| `a-vip` / `d-vip` | 27 |
-| `a-subscriber` / `d-subscriber` | 18 |
+| `vip` | 27 |
+| `subscriber` | 18 |
 | `default` | 9 |
 
 > Slot-Zahlen und Gruppennamen sind in `config.yml` unter `backpack.rank-slots` frei konfigurierbar.
@@ -346,11 +344,11 @@ Spieler können benannte Heimat-Standorte speichern und per GUI zu ihnen telepor
 
 | Rang (Beispiel) | Max. Homes |
 |---|---|
-| `admin` / `a-moderator` | Unbegrenzt |
-| `d-moderator` | 10 |
+| `admin` | Unbegrenzt |
+| `moderator` | 10 |
 | `streamer` | 7 |
-| `a-vip` / `d-vip` | 5 |
-| `a-subscriber` / `d-subscriber` | 4 |
+| `vip` | 5 |
+| `subscriber` | 4 |
 | `default` | 3 |
 
 > `-1` in der Config bedeutet unbegrenzt. Alle Werte sind unter `homes.rank-homes` konfigurierbar.
