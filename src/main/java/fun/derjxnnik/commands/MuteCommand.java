@@ -1,8 +1,9 @@
 package fun.derjxnnik.commands;
 
-import fun.derjxnnik.ban.BanEntry;
 import fun.derjxnnik.ban.BanManager;
 import fun.derjxnnik.misc.Messages;
+import fun.derjxnnik.mute.MuteEntry;
+import fun.derjxnnik.mute.MuteManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -16,47 +17,44 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class BanCommand implements CommandExecutor, TabCompleter {
+public class MuteCommand implements CommandExecutor, TabCompleter {
 
     private static final List<String> GRUND_VORSCHLAEGE = List.of(
-            "Cheating", "Griefing", "Spam", "Beleidigung", "Werbung", "Exploiting", "Trolling"
+            "Spam", "Beleidigung", "Werbung", "Toxic", "Rassismus", "Provokation"
     );
     private static final List<String> ZEIT_VORSCHLAEGE = List.of(
-            "1h", "6h", "12h", "1d", "3d", "7d", "14d", "30d", "permanent"
+            "1h", "6h", "12h", "1d", "3d", "7d", "permanent"
     );
 
-    private final BanManager banManager;
+    private final MuteManager muteManager;
 
-    public BanCommand(BanManager banManager) {
-        this.banManager = banManager;
+    public MuteCommand(MuteManager muteManager) {
+        this.muteManager = muteManager;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
-        boolean fullBan   = sender.hasPermission("utility.ban");
-        boolean limitedBan = sender.hasPermission("utility.ban.limited");
-        if (!fullBan && !limitedBan) {
+        if (!sender.hasPermission("utility.mute")) {
             sender.sendMessage(Messages.KEINE_BERECHTIGUNG);
             return true;
         }
-        if (args.length < 2) {
-            sender.sendMessage(Messages.BAN_NUTZUNG);
+        if (args.length < 3) {
+            sender.sendMessage(Messages.MUTE_NUTZUNG);
             return true;
         }
 
         String targetName = args[0];
         String grund = args[1];
-        String zeitArg = args.length >= 3 ? args[2] : null;
+        String zeitArg = args[2];
 
-        // Resolve player (online or offline)
         Player online = Bukkit.getPlayerExact(targetName);
         UUID targetUuid;
         String actualName;
 
         if (online != null) {
-            if (banManager.isBanned(online.getUniqueId())) {
-                sender.sendMessage(Messages.BAN_BEREITS_GEBANNT);
+            if (muteManager.isMuted(online.getUniqueId())) {
+                sender.sendMessage(Messages.MUTE_BEREITS_GEMUTET);
                 return true;
             }
             targetUuid = online.getUniqueId();
@@ -68,8 +66,8 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(Messages.SPIELER_OFFLINE);
                 return true;
             }
-            if (banManager.isBanned(op.getUniqueId())) {
-                sender.sendMessage(Messages.BAN_BEREITS_GEBANNT);
+            if (muteManager.isMuted(op.getUniqueId())) {
+                sender.sendMessage(Messages.MUTE_BEREITS_GEMUTET);
                 return true;
             }
             targetUuid = op.getUniqueId();
@@ -86,27 +84,15 @@ public class BanCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (!fullBan) {
-            long maxExpiry = System.currentTimeMillis() + 7L * 86_400_000L;
-            if (expiresAt == -1 || expiresAt > maxExpiry) {
-                sender.sendMessage(Messages.BAN_LIMIT_UEBERSCHRITTEN);
-                return true;
-            }
-        }
-
-        String bannerName = sender instanceof Player p ? p.getName() : "Konsole";
-        BanEntry entry = new BanEntry(actualName, targetUuid.toString(), grund, bannerName,
+        String muterName = sender instanceof Player p ? p.getName() : "Konsole";
+        MuteEntry entry = new MuteEntry(actualName, targetUuid.toString(), grund, muterName,
                 System.currentTimeMillis(), expiresAt);
-        banManager.ban(entry);
+        muteManager.mute(entry);
 
         if (online != null) {
-            String kickMsg = expiresAt == -1
-                    ? Messages.banKickNachrichtPermanent(grund, bannerName)
-                    : Messages.banKickNachricht(grund, dauer, bannerName);
-            online.kickPlayer(kickMsg);
+            online.sendMessage(Messages.muteNachricht(grund, dauer, muterName));
         }
-
-        sender.sendMessage(Messages.banErfolgreich(actualName, grund, dauer));
+        sender.sendMessage(Messages.muteErfolgreich(actualName, grund, dauer));
         return true;
     }
 
@@ -120,18 +106,12 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                     .filter(n -> n.toLowerCase().startsWith(input))
                     .collect(Collectors.toList());
         }
-        if (args.length == 2) {
-            String input = args[1].toLowerCase();
-            return GRUND_VORSCHLAEGE.stream()
-                    .filter(r -> r.toLowerCase().startsWith(input))
-                    .collect(Collectors.toList());
-        }
-        if (args.length == 3) {
-            String input = args[2].toLowerCase();
-            return ZEIT_VORSCHLAEGE.stream()
-                    .filter(t -> t.startsWith(input))
-                    .collect(Collectors.toList());
-        }
+        if (args.length == 2) return GRUND_VORSCHLAEGE.stream()
+                .filter(r -> r.toLowerCase().startsWith(args[1].toLowerCase()))
+                .collect(Collectors.toList());
+        if (args.length == 3) return ZEIT_VORSCHLAEGE.stream()
+                .filter(t -> t.startsWith(args[2].toLowerCase()))
+                .collect(Collectors.toList());
         return List.of();
     }
 }

@@ -63,13 +63,19 @@ ranks:
   # "default" wird verwendet wenn kein passender Rang gefunden wird
   gradients:
     admin:
-      colors: ["#FF4444", "#AA0000"]
+      colors: ["#FF2222", "#880000"]
+    moderator:
+      colors: ["#55FF55", "#00AA00"]
     a-moderator:
-      colors: ["#FF8800", "#FF4400"]
+      colors: ["#55FF55", "#00AA00"]
     d-moderator:
-      colors: ["#FFD700", "#FFA500"]
+      colors: ["#55FF55", "#00AA00"]
+    helper:
+      colors: ["#4488FF", "#0033AA"]
+    famous:
+      colors: ["#FF00FF", "#BB00FF"]
     streamer:
-      colors: ["#9B59B6", "#E91E8C"]
+      colors: ["#AA44FF", "#FF44BB"]
     a-vip:
       colors: ["#FFD700", "#FFC107"]
     d-vip:
@@ -80,6 +86,69 @@ ranks:
       colors: ["#64B5F6", "#1976D2"]
     default:
       colors: ["#AAAAAA", "#FFFFFF"]
+
+scoreboard:
+  # Header displayed at the top of the sidebar (always in small_caps font).
+  header:
+    text: "dasumc.de"
+    gradient:
+      - "#FF44FF"
+      - "#AA00CC"
+
+  # Set to true only when using the DASUMC resource pack (enables PUA icon characters
+  # before stat values). Public/standalone installs should keep this false.
+  use-textures: false
+
+  # Color for labels (e.g. "rang:", "coins:"). Hex only.
+  label-color: "#777777"
+
+  # Colors for resolved variable values. Use a list of 2+ hex colors for a gradient,
+  # or "auto" to use automatic coloring (rank uses LuckPerms prefix, ping uses speed-color).
+  # Lines starting with < are parsed as raw MiniMessage and ignore these settings.
+  value-colors:
+    rank: "auto"
+    coins:
+      - "#FFD700"
+      - "#FFB300"
+    kills:
+      - "#FF6464"
+      - "#CC0000"
+    deaths:
+      - "#FF6464"
+      - "#CC0000"
+    spielzeit:
+      - "#64B5F6"
+      - "#1565C0"
+    ping: "auto"
+    online:
+      - "#69F0AE"
+      - "#00C853"
+
+  # Lines listed top -> bottom.
+  # Supported variables: %rank% %coins% %kills% %deaths% %spielzeit% %ping% %online% %maxplayers%
+  # Lines starting with < are treated as raw MiniMessage (full control, no auto-formatting).
+  lines:
+    - ""
+    - "rang:"
+    - "%rank%"
+    - ""
+    - "coins:"
+    - "%coins%"
+    - ""
+    - "kills:"
+    - "%kills%"
+    - ""
+    - "tode:"
+    - "%deaths%"
+    - ""
+    - "clan:"
+    - "kommt bald!"
+    - ""
+    - "spielzeit:"
+    - "%spielzeit%"
+    - ""
+    - "online:"
+    - "%online%/%maxplayers%"
 
 use-command:
   bp: true

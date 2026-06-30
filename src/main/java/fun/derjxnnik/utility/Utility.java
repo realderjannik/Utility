@@ -7,6 +7,12 @@ import fun.derjxnnik.backpack.BackpackManager;
 import fun.derjxnnik.ban.BanManager;
 import fun.derjxnnik.commands.BackpackCommand;
 import fun.derjxnnik.commands.BanCommand;
+import fun.derjxnnik.commands.DiscordCommand;
+import fun.derjxnnik.commands.MuteCommand;
+import fun.derjxnnik.commands.TwitchCommand;
+import fun.derjxnnik.commands.UnmuteCommand;
+import fun.derjxnnik.commands.WebsiteCommand;
+import fun.derjxnnik.mute.MuteManager;
 import fun.derjxnnik.commands.BugreportCommand;
 import fun.derjxnnik.commands.CoinsCommand;
 import fun.derjxnnik.commands.MsgCommand;
@@ -32,6 +38,8 @@ import fun.derjxnnik.commands.SetSpawnCommand;
 import fun.derjxnnik.commands.SpawnCommand;
 import fun.derjxnnik.commands.TPACommand;
 import fun.derjxnnik.commands.UUIDCommand;
+import fun.derjxnnik.commands.HelpCommand;
+import fun.derjxnnik.commands.InfoCommand;
 import fun.derjxnnik.commands.UtilityCommand;
 import fun.derjxnnik.container.ContainerCommand;
 import fun.derjxnnik.container.ContainerListener;
@@ -49,7 +57,6 @@ import fun.derjxnnik.listeners.InventoryProtectionListener;
 import fun.derjxnnik.listeners.JoinListener;
 import fun.derjxnnik.listeners.QuitListener;
 import fun.derjxnnik.listeners.ServerListPingListener;
-import fun.derjxnnik.listeners.SitListener;
 import fun.derjxnnik.listeners.SwitchWorldListener;
 import fun.derjxnnik.messages.MessageManager;
 import fun.derjxnnik.rank.RankManager;
@@ -87,6 +94,7 @@ public final class Utility extends JavaPlugin {
    private CurrencyManager currencyManager;
    private SettingsManager settingsManager;
    private BanManager banManager;
+   private MuteManager muteManager;
    private MessageManager messageManager;
 
    public void onEnable() {
@@ -107,6 +115,7 @@ public final class Utility extends JavaPlugin {
 
       this.settingsManager = new SettingsManager(this.getDataFolder());
       this.banManager = new BanManager(this.getDataFolder());
+      this.muteManager = new MuteManager(this.getDataFolder());
       this.messageManager = new MessageManager();
 
       ChatInputListener chatListener = new ChatInputListener(homeManager);
@@ -155,6 +164,11 @@ public final class Utility extends JavaPlugin {
       this.getCommand("utility").setExecutor(new UtilityCommand());
       this.getCommand("settings").setExecutor(new SettingsCommand(settingsManager));
       this.getCommand("bugreport").setExecutor(new BugreportCommand());
+
+      InfoCommand infoCommand = new InfoCommand();
+      this.getCommand("info").setExecutor(infoCommand);
+      this.getCommand("info").setTabCompleter(infoCommand);
+      this.getCommand("help").setExecutor(new HelpCommand());
       this.getCommand("color").setExecutor(new ColorCommand(this.colorManager));
       this.getCommand("color").setTabCompleter(new ColorTabCompleter());
 
@@ -181,6 +195,17 @@ public final class Utility extends JavaPlugin {
       this.getCommand("unban").setExecutor(unbanCommand);
       this.getCommand("unban").setTabCompleter(unbanCommand);
 
+      MuteCommand muteCommand = new MuteCommand(this.muteManager);
+      this.getCommand("mute").setExecutor(muteCommand);
+      this.getCommand("mute").setTabCompleter(muteCommand);
+      UnmuteCommand unmuteCommand = new UnmuteCommand(this.muteManager);
+      this.getCommand("unmute").setExecutor(unmuteCommand);
+      this.getCommand("unmute").setTabCompleter(unmuteCommand);
+
+      this.getCommand("discord").setExecutor(new DiscordCommand());
+      this.getCommand("website").setExecutor(new WebsiteCommand());
+      this.getCommand("twitch").setExecutor(new TwitchCommand());
+
       ContainerCommand containerCommand = new ContainerCommand(this.lockManager);
       this.getCommand("container").setExecutor(containerCommand);
 
@@ -202,7 +227,6 @@ public final class Utility extends JavaPlugin {
       this.getServer().getPluginManager().registerEvents(new SwitchWorldListener(), this);
       this.getServer().getPluginManager().registerEvents(homeClickListener, this);
       this.getServer().getPluginManager().registerEvents(chatListener, this);
-      this.getServer().getPluginManager().registerEvents(new SitListener(settingsManager), this);
       this.getServer().getPluginManager().registerEvents(new HeadsClickListener(this.headsManager, this), this);
       this.getServer().getPluginManager().registerEvents(new InventoryProtectionListener(), this);
       this.getServer().getPluginManager().registerEvents(new BackpackItemListener(backpackManager, this), this);
@@ -242,12 +266,24 @@ public final class Utility extends JavaPlugin {
          "resourcepack/assets/minecraft/textures/font/label_S.png",
          "resourcepack/assets/minecraft/textures/font/label_M.png",
          "resourcepack/assets/minecraft/textures/font/label_L.png",
-         "resourcepack/assets/minecraft/textures/font/label_XL.png"
+         "resourcepack/assets/minecraft/textures/font/label_XL.png",
+         "resourcepack/assets/minecraft/textures/font/header_general.png",
+         "resourcepack/assets/minecraft/textures/font/header_rank.png",
+         "resourcepack/assets/minecraft/textures/font/header_money.png",
+         "resourcepack/assets/minecraft/textures/font/header_kills.png",
+         "resourcepack/assets/minecraft/textures/font/header_deaths.png",
+         "resourcepack/assets/minecraft/textures/font/header_clan.png",
+         "resourcepack/assets/minecraft/textures/font/label_discord.png",
+         "resourcepack/assets/minecraft/textures/font/label_website.png",
+         "resourcepack/assets/minecraft/textures/font/label_twitch.png"
       };
       for (String path : files) {
          File target = new File(getDataFolder(), path);
-         if (!target.exists()) {
-            saveResource(path, false);
+         // Always overwrite font JSON files so texture additions take effect immediately.
+         // PNG files are only written once (user may have replaced them manually).
+         boolean alwaysOverwrite = path.endsWith(".json") || path.endsWith(".mcmeta");
+         if (alwaysOverwrite || !target.exists()) {
+            saveResource(path, alwaysOverwrite);
          }
       }
    }
@@ -272,5 +308,6 @@ public final class Utility extends JavaPlugin {
    public CurrencyManager getCurrencyManager()    { return currencyManager; }
    public SettingsManager getSettingsManager()    { return settingsManager; }
    public BanManager getBanManager()              { return banManager; }
+   public MuteManager getMuteManager()            { return muteManager; }
    public MessageManager getMessageManager()      { return messageManager; }
 }

@@ -1,6 +1,8 @@
 package fun.derjxnnik.rank;
 
+import fun.derjxnnik.currency.CurrencyManager;
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Icons;
 import fun.derjxnnik.utility.Utility;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
@@ -12,6 +14,7 @@ import net.luckperms.api.event.user.UserDataRecalculateEvent;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Statistic;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -54,6 +57,10 @@ public class RankManager {
 
     public boolean isLuckPermsPresent() {
         return luckPermsPresent;
+    }
+
+    public LuckPerms getLuckPerms() {
+        return luckPerms;
     }
 
     public boolean isAvailable() {
@@ -109,17 +116,22 @@ public class RankManager {
 
     public Component buildTabComponent(Player player) {
         FileConfiguration config = Utility.getInstance().getConfig();
+        int deaths = player.getStatistic(Statistic.DEATHS);
+        Key sc  = Key.key("minecraft", "small_caps");
+        Key def = Key.key("minecraft", "default");
+
+        Component nameAndDeaths = Component.text(player.getName(), NamedTextColor.WHITE).font(sc)
+                .append(Component.text(" " + deaths, NamedTextColor.YELLOW).font(sc));
+
         if (!isAvailable() || !config.getBoolean("ranks.show-in-tab", true))
-            return Component.text(player.getName(), NamedTextColor.WHITE);
+            return nameAndDeaths;
 
         Component prefix = buildGradientPrefix(player);
-        if (prefix.equals(Component.empty()))
-            return Component.text(player.getName(), NamedTextColor.WHITE);
+        if (prefix.equals(Component.empty())) return nameAndDeaths;
 
-        Key sc = Key.key("minecraft", "small_caps");
         return prefix
-                .append(Component.text(" | ", NamedTextColor.GRAY).font(sc))
-                .append(Component.text(player.getName(), NamedTextColor.WHITE).font(sc));
+                .append(Component.text(" | ", NamedTextColor.GRAY).font(def))
+                .append(nameAndDeaths);
     }
 
     public String getPlayerGroup(Player player) {
@@ -186,7 +198,18 @@ public class RankManager {
         Team team = board.getTeam(teamName);
         if (team == null) team = board.registerNewTeam(teamName);
 
-        team.prefix(prefix.append(Component.text(" | ", NamedTextColor.GRAY)));
+        Key def = Key.key("minecraft", "default");
+        Key sc  = Key.key("minecraft", "small_caps");
+        team.prefix(prefix.append(Component.text(" | ", NamedTextColor.GRAY).font(def)));
+
+        // Coins suffix: directly after the player name on the same line
+        CurrencyManager cm = Utility.getInstance().getCurrencyManager();
+        if (cm != null) {
+            long coins = cm.getBalance(target.getUniqueId());
+            Component suffix = Component.text(" " + Icons.COINS + " ", NamedTextColor.YELLOW)
+                    .append(Component.text(String.format("%,d", coins), NamedTextColor.YELLOW).font(sc));
+            team.suffix(suffix);
+        }
 
         if (!team.hasEntry(target.getName())) {
             team.addEntry(target.getName());

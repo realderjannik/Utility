@@ -1,6 +1,8 @@
 package fun.derjxnnik.commands;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.rank.RankManager;
+import fun.derjxnnik.rank.RankPermissionSetup;
 import fun.derjxnnik.utility.Utility;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,6 +53,22 @@ public class UtilityCommand implements CommandExecutor {
          plugin.reloadConfig();
          long duration = System.currentTimeMillis() - start;
          sender.sendMessage(Colors.PREFIX + Colors.GREEN + "Configuration reloaded successfully " + Colors.GRAY + "(" + duration + " ms).");
+         return true;
+      }
+
+      if (args.length == 1 && args[0].equalsIgnoreCase("perms")) {
+         if (sender instanceof Player p && !p.isOp()) {
+            p.sendMessage(Colors.PREFIX + Colors.RED + "Du hast keine Berechtigung für diesen Befehl.");
+            return true;
+         }
+         RankManager rm = plugin.getRankManager();
+         if (!rm.isLuckPermsPresent()) {
+            sender.sendMessage(Colors.PREFIX + Colors.RED + "LuckPerms ist nicht installiert.");
+            return true;
+         }
+         sender.sendMessage(Colors.PREFIX + Colors.YELLOW + "Wende Permissions auf LP-Gruppen an...");
+         new RankPermissionSetup(rm.getLuckPerms()).apply();
+         sender.sendMessage(Colors.PREFIX + Colors.GREEN + "Fertig! Alle Rang-Permissions wurden gesetzt.");
          return true;
       }
 

@@ -1,7 +1,10 @@
 package fun.derjxnnik.listeners;
 
+import fun.derjxnnik.ban.BanManager;
 import fun.derjxnnik.chat.ColorManager;
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.misc.Messages;
+import fun.derjxnnik.mute.MuteEntry;
 import fun.derjxnnik.rank.RankManager;
 import fun.derjxnnik.utility.Utility;
 import io.papermc.paper.event.player.AsyncChatEvent;
@@ -35,6 +38,14 @@ public class ChatListener implements Listener {
     public void onChat(AsyncChatEvent e) {
         Player player = e.getPlayer();
 
+        MuteEntry mute = Utility.getInstance().getMuteManager().getMute(player.getUniqueId());
+        if (mute != null) {
+            e.setCancelled(true);
+            player.sendMessage(Messages.muteChatBlockiert(mute.getReason(),
+                    BanManager.formatDuration(mute.getExpiresAt())));
+            return;
+        }
+
         e.renderer((source, sourceDisplayName, message, viewer) -> {
             Component processedMessage = processMessage(
                     PlainTextComponentSerializer.plainText().serialize(message), player);
@@ -47,7 +58,7 @@ public class ChatListener implements Listener {
                 Component prefix = rankManager.buildGradientPrefix(player);
                 if (!prefix.equals(Component.empty())) {
                     sender = prefix
-                            .append(Component.text(" | ", NamedTextColor.GRAY).font(SC))
+                            .append(Component.text(" | ", NamedTextColor.GRAY).font(DEFAULT_FONT))
                             .append(Component.text(player.getName(), NamedTextColor.WHITE).font(SC))
                             .append(Component.text(": ", NamedTextColor.GRAY).font(DEFAULT_FONT));
                 } else {

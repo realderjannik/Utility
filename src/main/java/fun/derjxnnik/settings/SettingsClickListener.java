@@ -26,7 +26,7 @@ public class SettingsClickListener implements Listener {
    private final SettingsManager settings;
    private final BackpackItemManager backpackManager;
 
-   private final Map<Material, Material> dyeToBundle = new LinkedHashMap<Material, Material>() {{
+   private final Map<Material, Material> dyeToBundle = new LinkedHashMap<>() {{
       put(Material.WHITE_DYE,       Material.WHITE_BUNDLE);
       put(Material.ORANGE_DYE,      Material.ORANGE_BUNDLE);
       put(Material.MAGENTA_DYE,     Material.MAGENTA_BUNDLE);
@@ -62,12 +62,11 @@ public class SettingsClickListener implements Listener {
          e.setResult(Result.DENY);
       }
 
-      String title = stripped;
       ItemStack clicked = e.getCurrentItem();
       if (clicked == null || !clicked.hasItemMeta()) return;
       String name = strip(clicked.getItemMeta().getDisplayName());
 
-      if (title.equals("Einstellungen")) {
+      if (stripped.equals("Einstellungen")) {
          e.setCancelled(true);
 
          if (name.startsWith("Private Nachrichten")) {
@@ -77,23 +76,13 @@ public class SettingsClickListener implements Listener {
             p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, !current ? 1.4F : 0.8F);
             Bukkit.getScheduler().runTaskLater(Utility.getInstance(), () -> p.performCommand("settings"), 2L);
 
-         } else if (name.startsWith("Sitzen")) {
-            boolean current = settings.isSittingEnabled(p);
-            settings.setSittingEnabled(p, !current);
-            p.sendActionBar(!current ? Messages.SETTINGS_SITZEN_AN : Messages.SETTINGS_SITZEN_AUS);
-            p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.2F);
-            Bukkit.getScheduler().runTaskLater(Utility.getInstance(), () -> p.performCommand("settings"), 2L);
-
          } else if (name.startsWith("Rucksack-Item")) {
             boolean current = settings.hasBackpackEnabled(p);
             boolean newState = !current;
             settings.setBackpackEnabled(p, newState);
             p.sendActionBar(newState ? Messages.SETTINGS_RUCKSACK_AN : Messages.SETTINGS_RUCKSACK_AUS);
-            if (newState) {
-               backpackManager.giveBackpackItem(p);
-            } else {
-               backpackManager.removeBackpackItem(p);
-            }
+            if (newState) backpackManager.giveBackpackItem(p);
+            else          backpackManager.removeBackpackItem(p);
             p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, newState ? 1.4F : 0.8F);
             Bukkit.getScheduler().runTaskLater(Utility.getInstance(), () -> p.performCommand("settings"), 2L);
 
@@ -111,9 +100,16 @@ public class SettingsClickListener implements Listener {
             p.sendActionBar(!current ? Messages.SETTINGS_GUTHABEN_AN : Messages.SETTINGS_GUTHABEN_AUS);
             p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, !current ? 1.4F : 0.8F);
             Bukkit.getScheduler().runTaskLater(Utility.getInstance(), () -> p.performCommand("settings"), 2L);
+
+         } else if (name.startsWith("Profil sichtbar")) {
+            boolean current = settings.isInfoVisible(p);
+            settings.setInfoVisible(p, !current);
+            p.sendActionBar(!current ? Messages.SETTINGS_INFO_AN : Messages.SETTINGS_INFO_AUS);
+            p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, !current ? 1.4F : 0.8F);
+            Bukkit.getScheduler().runTaskLater(Utility.getInstance(), () -> p.performCommand("settings"), 2L);
          }
 
-      } else if (title.equals("Rucksack-Farbe")) {
+      } else if (stripped.equals("Rucksack-Farbe")) {
          e.setCancelled(true);
          Material bundleMat = dyeToBundle.get(clicked.getType());
          if (bundleMat == null) {
@@ -144,9 +140,7 @@ public class SettingsClickListener implements Listener {
       p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
    }
 
-   private String strip(String s) {
-      return ChatColor.stripColor(s == null ? "" : s);
-   }
+   private String strip(String s) { return ChatColor.stripColor(s == null ? "" : s); }
 
    private String pretty(Material mat) {
       if (mat == null) return "Unbekannt";

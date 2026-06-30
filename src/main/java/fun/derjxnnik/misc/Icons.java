@@ -19,4 +19,15 @@ public class Icons {
     public static final String NEG_M     = "";
     public static final String NEG_L     = "";
     public static final String NEG_XL    = "";
+
+    public static final String  HEADER_GENERAL = "";
+    public static final String  HEADER_RANK    = "";
+    public static final String  HEADER_MONEY   = "";
+    public static final String  HEADER_KILLS   = "";
+    public static final String  HEADER_DEATHS  = "";
+    public static final String  HEADER_CLAN    = "";
+
+    public static final String  LABEL_DISCORD  = "";
+    public static final String  LABEL_WEBSITE  = "";
+    public static final String  LABEL_TWITCH   = "";
 }

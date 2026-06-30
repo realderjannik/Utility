@@ -32,51 +32,55 @@ public class SettingsCommand implements CommandExecutor {
 
       // Slot 0 – Private Nachrichten
       boolean msgEnabled = settings.isMsgEnabled(p);
-      ItemStack msgItem = new ItemStack(Material.PAPER);
-      ItemMeta msgMeta = msgItem.getItemMeta();
-      msgMeta.setDisplayName("§ePrivate Nachrichten: " + (msgEnabled ? "§aAN" : "§cAUS"));
-      msgMeta.setLore(Arrays.asList("§7Klicke, um private Nachrichten zu " + (msgEnabled ? "§cdeaktivieren" : "§aaktivieren")));
-      msgItem.setItemMeta(msgMeta);
+      ItemStack msgItem = makeItem(Material.PAPER,
+              "§ePrivate Nachrichten: " + state(msgEnabled),
+              "§7Klicke, um private Nachrichten zu " + toggle(msgEnabled));
       gui.setItem(0, msgItem);
 
-      // Slot 2 – Sitzen
-      boolean sitEnabled = settings.isSittingEnabled(p);
-      ItemStack sitItem = new ItemStack(Material.OAK_STAIRS);
-      ItemMeta sitMeta = sitItem.getItemMeta();
-      sitMeta.setDisplayName("§eSitzen: " + (sitEnabled ? "§aAN" : "§cAUS"));
-      sitMeta.setLore(Arrays.asList("§7Klicke, um das Sitzen zu " + (sitEnabled ? "§cdeaktivieren" : "§aaktivieren")));
-      sitItem.setItemMeta(sitMeta);
-      gui.setItem(2, sitItem);
-
-      // Slot 4 – Rucksack-Item
+      // Slot 2 – Rucksack-Item
       boolean bpEnabled = settings.hasBackpackEnabled(p);
-      ItemStack bpItem = new ItemStack(Material.BUNDLE);
-      ItemMeta bpMeta = bpItem.getItemMeta();
-      bpMeta.setDisplayName("§eRucksack-Item: " + (bpEnabled ? "§aAN" : "§cAUS"));
-      bpMeta.setLore(Arrays.asList("§7Klicke, um das Rucksack-Item zu " + (bpEnabled ? "§cdeaktivieren" : "§aaktivieren")));
-      bpItem.setItemMeta(bpMeta);
-      gui.setItem(4, bpItem);
+      ItemStack bpItem = makeItem(Material.BUNDLE,
+              "§eRucksack-Item: " + state(bpEnabled),
+              "§7Klicke, um das Rucksack-Item zu " + toggle(bpEnabled));
+      gui.setItem(2, bpItem);
 
-      // Slot 6 – Rucksack-Farbe
-      ItemStack colorItem = new ItemStack(Material.BLUE_DYE);
-      ItemMeta colorMeta = colorItem.getItemMeta();
-      colorMeta.setDisplayName("§eRucksack-Farbe");
-      colorMeta.setLore(Arrays.asList("§7Aktuell: §f" + settings.getBackpackColor(p), "§7Klicke zum Ändern"));
-      colorItem.setItemMeta(colorMeta);
-      gui.setItem(6, colorItem);
+      // Slot 4 – Rucksack-Farbe
+      ItemStack colorItem = makeItem(Material.BLUE_DYE,
+              "§eRucksack-Farbe",
+              "§7Aktuell: §f" + settings.getBackpackColor(p),
+              "§7Klicke zum Ändern");
+      gui.setItem(4, colorItem);
 
-      // Slot 8 – Guthaben anzeigen
+      // Slot 6 – Guthaben anzeigen
       boolean showBalance = settings.isShowBalance(p);
-      ItemStack balItem = new ItemStack(Material.GOLD_INGOT);
-      ItemMeta balMeta = balItem.getItemMeta();
-      balMeta.setDisplayName("§eGuthaben anzeigen: " + (showBalance ? "§aAN" : "§cAUS"));
-      balMeta.setLore(Arrays.asList("§7Legt fest, ob andere Spieler",
-              "§7dein Guthaben sehen dürfen."));
-      balItem.setItemMeta(balMeta);
-      gui.setItem(8, balItem);
+      ItemStack balItem = makeItem(Material.GOLD_INGOT,
+              "§eGuthaben anzeigen: " + state(showBalance),
+              "§7Legt fest, ob andere Spieler",
+              "§7dein Guthaben sehen dürfen.");
+      gui.setItem(6, balItem);
+
+      // Slot 8 – Profil sichtbar (/info)
+      boolean infoVisible = settings.isInfoVisible(p);
+      ItemStack infoItem = makeItem(Material.PLAYER_HEAD,
+              "§eProfil sichtbar: " + state(infoVisible),
+              "§7Legt fest, ob andere Spieler",
+              "§7dein Profil per /info sehen dürfen.");
+      gui.setItem(8, infoItem);
 
       p.openInventory(gui);
       p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
       return true;
    }
+
+   private ItemStack makeItem(Material mat, String name, String... lore) {
+      ItemStack item = new ItemStack(mat);
+      ItemMeta meta = item.getItemMeta();
+      meta.setDisplayName(name);
+      meta.setLore(Arrays.asList(lore));
+      item.setItemMeta(meta);
+      return item;
+   }
+
+   private String state(boolean on) { return on ? "§aAN" : "§cAUS"; }
+   private String toggle(boolean on) { return on ? "§cdeaktivieren" : "§aaktivieren"; }
 }

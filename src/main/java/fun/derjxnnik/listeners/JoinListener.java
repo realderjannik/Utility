@@ -7,6 +7,7 @@ import fun.derjxnnik.rank.RankManager;
 import fun.derjxnnik.resourcepack.ResourcePackManager;
 import fun.derjxnnik.utility.Utility;
 import fun.derjxnnik.utility.scoreboard.ScoreboardManager;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -72,11 +73,34 @@ public class JoinListener implements Listener {
       int online = Bukkit.getOnlinePlayers().size();
       int max = Bukkit.getMaxPlayers();
 
-      Component header = Component.text("\n\n" + Icons.LOGO + "\n", NamedTextColor.WHITE);
+      boolean useTex = plugin.getConfig().getBoolean("scoreboard.use-textures", false);
+      Component headerInner;
+      if (useTex) {
+         headerInner = Component.text(fun.derjxnnik.misc.Icons.HEADER_GENERAL);
+      } else {
+         String headerText = plugin.getConfig().getString("scoreboard.header.text", "dasumc.de");
+         java.util.List<String> grad = plugin.getConfig().getStringList("scoreboard.header.gradient");
+         String from = grad.size() >= 1 ? grad.get(0) : "#FF44FF";
+         String to   = grad.size() >= 2 ? grad.get(1) : "#AA00CC";
+         headerInner = MiniMessage.miniMessage().deserialize(
+                 "<font:minecraft:small_caps><gradient:" + from + ":" + to + ">"
+                         + headerText + "</gradient></font>");
+      }
+      Component header = Component.text("\n").append(headerInner).append(Component.text("\n"));
 
-      Component footer = Component.text("\n").append(
-              MiniMessage.miniMessage().deserialize(
-                      "<font:minecraft:small_caps><gradient:#00BFFF:#7B68EE>Online Players: " + online + "/" + max + "</gradient></font>"));
+      Key sc = Key.key("minecraft", "small_caps");
+      Component footerDiscord = Component.text(Icons.LABEL_DISCORD + " ", NamedTextColor.WHITE)
+              .append(Component.text("dasumc.de/discord", NamedTextColor.GRAY).font(sc));
+      Component footerTwitch = Component.text(Icons.LABEL_TWITCH + " ", NamedTextColor.WHITE)
+              .append(Component.text("dasumc.de/twitch", NamedTextColor.GRAY).font(sc));
+      Component footerWebsite = Component.text(Icons.LABEL_WEBSITE + " ", NamedTextColor.WHITE)
+              .append(Component.text("dasumc.de", NamedTextColor.GRAY).font(sc));
+      Component footer = Component.text("\n")
+              .append(footerDiscord).append(Component.newline())
+              .append(Component.newline())
+              .append(footerTwitch).append(Component.newline())
+              .append(Component.newline())
+              .append(footerWebsite).append(Component.text("\n"));
 
       for (Player p : Bukkit.getOnlinePlayers()) {
          p.sendPlayerListHeaderAndFooter(header, footer);

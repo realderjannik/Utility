@@ -1,5 +1,5 @@
 name: Utility
-version: '1.6.1'
+version: '1.7.2'
 main: fun.derjxnnik.utility.Utility
 api-version: '1.21.10'
 softdepend:
@@ -18,7 +18,7 @@ commands:
     description: Show your current ping
     usage: /ping
     permission: utility.ping
-    aliases: [ms]
+    aliases: [ms, amilagging]
 
   ec:
     description: Open your Ender Chest
@@ -35,7 +35,7 @@ commands:
     description: Open a crafting table
     usage: /craft
     permission: utility.craftingtable
-    aliases: [craftingtable, workbench, cr]
+    aliases: [craftingtable, workbench, cr, werkbank]
 
   hat:
     description: Wear the item in your hand as a hat
@@ -68,7 +68,7 @@ commands:
     description: Show your total playtime
     usage: /playtime
     permission: utility.playtime
-    aliases: [pt, spielzeit]
+    aliases: [pt, spielzeit, sz]
   day:
     description: Show the current day
     usage: /day
@@ -83,7 +83,7 @@ commands:
     description: Open the HomeGUI
     usage: /home
     permission: utility.home
-    aliases: [waypoints, quicktp, qtp]
+    aliases: [waypoints, wegpunkt]
   head:
     description: Opens the head menu or gives a player's head.
     usage: /head [player]
@@ -101,6 +101,16 @@ commands:
     description: Open the Settings Menu
     usage: /settings
     aliases: [options, configure]
+  info:
+    description: Spielerinfo anzeigen
+    usage: /info <Spieler>
+    aliases: [playerinfo, spielerinfo]
+
+  help:
+    description: Zeigt alle verfügbaren Befehle an
+    usage: /help
+    aliases: [hilfe, befehle, commands]
+
   bugreport:
     description: Create a bugreport
     aliases: [bug, ifoundabug]
@@ -147,13 +157,54 @@ commands:
     usage: /unban <Spieler>
     permission: utility.ban
 
+  mute:
+    description: Einen Spieler stummschalten
+    usage: /mute <Spieler> <Grund> <Zeit>
+    permission: utility.mute
+
+  unmute:
+    description: Stummschaltung eines Spielers aufheben
+    usage: /unmute <Spieler>
+    permission: utility.mute
+
+  discord:
+    description: Discord-Link anzeigen
+    usage: /discord
+    aliases: [dc, staytuned, ]
+
+  website:
+    description: Website-Link anzeigen
+    usage: /website
+    aliases: [web]
+
+  twitch:
+    description: Twitch/Bewerber-Link anzeigen
+    usage: /twitch
+    aliases: [streamer]
+
 permissions:
   utility.ban:
-    description: Spieler bannen und entbannen
+    description: Spieler bannen und entbannen (permanent + unbegrenzte Zeit)
+    default: op
+
+  utility.ban.limited:
+    description: Spieler bannen – maximal 7 Tage, kein Permanent-Ban
+    default: op
+
+  utility.mute:
+    description: Spieler stummschalten und entstummen
     default: op
 
   utility.coins.others:
     description: Kontostand anderer Spieler immer sehen (ignoriert Privat-Einstellung)
+    default: op
+
+  utility.help.staff:
+    description: Zeigt Team-Befehle in /help an
+    default: op
+
+  utility.info.bypass:
+    description: /info auch bei Spielern mit privat-Profil nutzen
     default: op
 
   utility.chat.use:

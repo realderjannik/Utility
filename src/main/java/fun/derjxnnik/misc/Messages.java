@@ -61,6 +61,36 @@ public class Messages {
                 + Colors.GRAY + "Gebannt von: " + Colors.WHITE + banner;
     }
 
+    // ==================== /mute ====================
+    public static final String MUTE_NUTZUNG          = Colors.PREFIX + Colors.RED + "Nutzung: /mute <Spieler> <Grund> <Zeit>";
+    public static final String UNMUTE_NUTZUNG        = Colors.PREFIX + Colors.RED + "Nutzung: /unmute <Spieler>";
+    public static final String MUTE_BEREITS_GEMUTET  = Colors.PREFIX + Colors.RED + "Dieser Spieler ist bereits stummgeschaltet.";
+    public static final String MUTE_NICHT_GEFUNDEN   = Colors.PREFIX + Colors.RED + "Kein stummgeschalteter Spieler mit diesem Namen gefunden.";
+    public static final String BAN_LIMIT_UEBERSCHRITTEN = Colors.PREFIX + Colors.RED + "Du kannst maximal 7 Tage bannen. Permanente Bans sind dir nicht erlaubt.";
+
+    public static String muteErfolgreich(String name, String grund, String dauer) {
+        return Colors.PREFIX + Colors.GREEN + "Spieler " + Colors.WHITE + name + Colors.GREEN + " wurde stummgeschaltet."
+                + Colors.GRAY + " Grund: " + Colors.WHITE + grund
+                + Colors.GRAY + " | Dauer: " + Colors.WHITE + dauer;
+    }
+
+    public static String unmuteErfolgreich(String name) {
+        return Colors.PREFIX + Colors.GREEN + "Spieler " + Colors.WHITE + name + Colors.GREEN + " wurde entstummt.";
+    }
+
+    public static String muteNachricht(String grund, String dauer, String muter) {
+        return Colors.PREFIX + Colors.RED + "Du wurdest stummgeschaltet!\n"
+                + Colors.GRAY + "Grund: " + Colors.WHITE + grund + "\n"
+                + Colors.GRAY + "Dauer: " + Colors.WHITE + dauer + "\n"
+                + Colors.GRAY + "Von: " + Colors.WHITE + muter;
+    }
+
+    public static String muteChatBlockiert(String grund, String dauer) {
+        return Colors.PREFIX + Colors.RED + "Du bist stummgeschaltet! "
+                + Colors.GRAY + "Grund: " + Colors.WHITE + grund
+                + Colors.GRAY + " | Verbleibend: " + Colors.WHITE + dauer;
+    }
+
     // ==================== /coins ====================
     public static final String COINS_NUTZUNG = Colors.PREFIX + Colors.RED + "Nutzung: /coins [Spieler]";
     public static final String COINS_PRIVAT  = Colors.PREFIX + Colors.RED + "Dieser Spieler hat seinen Kontostand auf privat gestellt.";
@@ -228,7 +258,7 @@ public class Messages {
 
     // ==================== /bugreport ====================
     public static final String BUGREPORT_LINK_TEXT  = "Melde Bugs unter: ";
-    public static final String BUGREPORT_LINK_URL   = "derjxnnik.fun/bugreport";
+    public static final String BUGREPORT_LINK_URL   = "dasumc.de/bugreport";
     public static final String BUGREPORT_LINK_HOVER = "Klicken um die Bugreport-Seite zu öffnen";
 
     // ==================== /tpa ====================
@@ -250,8 +280,8 @@ public class Messages {
     public static final String CONTAINER_KEINE_BERECHTIGUNG = Colors.PREFIX + Colors.RED  + "Dieser Container ist gesperrt!";
 
     // ==================== /settings (ActionBars) ====================
-    public static final String SETTINGS_SITZEN_AN    = "§7Sitzen wurde §aaktiviert§7.";
-    public static final String SETTINGS_SITZEN_AUS   = "§7Sitzen wurde §cdeaktiviert§7.";
+    public static final String SETTINGS_INFO_AN       = "§7Dein Profil ist jetzt §asichtbar§7.";
+    public static final String SETTINGS_INFO_AUS      = "§7Dein Profil ist jetzt §cprivat§7.";
     public static final String SETTINGS_RUCKSACK_AN  = "§7Rucksack-Item wurde §aaktiviert§7.";
     public static final String SETTINGS_RUCKSACK_AUS = "§7Rucksack-Item wurde §cdeaktiviert§7.";
     public static final String SETTINGS_MSG_AN       = "§7Private Nachrichten wurden §aaktiviert§7.";
