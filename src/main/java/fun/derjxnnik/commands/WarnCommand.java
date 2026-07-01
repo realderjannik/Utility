@@ -2,6 +2,8 @@ package fun.derjxnnik.commands;
 
 import fun.derjxnnik.misc.Colors;
 import fun.derjxnnik.misc.Messages;
+import fun.derjxnnik.rank.RankManager;
+import fun.derjxnnik.utility.Utility;
 import fun.derjxnnik.warn.WarnEntry;
 import fun.derjxnnik.warn.WarnManager;
 import org.bukkit.Bukkit;
@@ -45,6 +47,7 @@ public class WarnCommand implements CommandExecutor, TabCompleter {
         }
 
         String senderName = sender instanceof Player p ? p.getName() : "Konsole";
+        String senderDisplay = buildDisplay(sender instanceof Player sp ? sp : null, senderName);
         String reason = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
         String tName  = target.getName() != null ? target.getName() : args[0];
 
@@ -56,7 +59,7 @@ public class WarnCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(Messages.warnErfolgreich(tName, reason, count));
 
         Player online = Bukkit.getPlayer(target.getUniqueId());
-        if (online != null) online.sendMessage(Messages.warnNachricht(reason, senderName, count));
+        if (online != null) online.sendMessage(Messages.warnNachricht(reason, senderDisplay, count));
 
         // Broadcast to other staff
         String staffLine = Colors.PREFIX + Colors.GOLD + "[WARN] " + Colors.WHITE + senderName
@@ -78,6 +81,16 @@ public class WarnCommand implements CommandExecutor, TabCompleter {
                     + " wurde automatisch für 7 Tage gebannt (" + count + " Verwarnungen).");
         }
         return true;
+    }
+
+    private static String buildDisplay(Player p, String fallback) {
+        if (p == null) return fallback;
+        RankManager rm = Utility.getInstance().getRankManager();
+        if (rm != null && rm.isAvailable()) {
+            String prefix = rm.getPrefix(p);
+            if (!prefix.isEmpty()) return prefix + " | " + p.getName();
+        }
+        return p.getName();
     }
 
     @Override

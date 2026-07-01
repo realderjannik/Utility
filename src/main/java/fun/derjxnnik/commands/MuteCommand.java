@@ -4,6 +4,8 @@ import fun.derjxnnik.ban.BanManager;
 import fun.derjxnnik.misc.Messages;
 import fun.derjxnnik.mute.MuteEntry;
 import fun.derjxnnik.mute.MuteManager;
+import fun.derjxnnik.rank.RankManager;
+import fun.derjxnnik.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -85,15 +87,26 @@ public class MuteCommand implements CommandExecutor, TabCompleter {
         }
 
         String muterName = sender instanceof Player p ? p.getName() : "Konsole";
+        String muterDisplay = buildDisplay(sender instanceof Player sp ? sp : null, muterName);
         MuteEntry entry = new MuteEntry(actualName, targetUuid.toString(), grund, muterName,
                 System.currentTimeMillis(), expiresAt);
         muteManager.mute(entry);
 
         if (online != null) {
-            online.sendMessage(Messages.muteNachricht(grund, dauer, muterName));
+            online.sendMessage(Messages.muteNachricht(grund, dauer, muterDisplay));
         }
         sender.sendMessage(Messages.muteErfolgreich(actualName, grund, dauer));
         return true;
+    }
+
+    private static String buildDisplay(Player p, String fallback) {
+        if (p == null) return fallback;
+        RankManager rm = Utility.getInstance().getRankManager();
+        if (rm != null && rm.isAvailable()) {
+            String prefix = rm.getPrefix(p);
+            if (!prefix.isEmpty()) return prefix + " | " + p.getName();
+        }
+        return p.getName();
     }
 
     @Override

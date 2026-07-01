@@ -75,7 +75,8 @@ public class HelpCommand implements CommandExecutor {
          entry(p, "/unmute <Spieler>",                     "Stummschaltung aufheben");
          entry(p, "/warn <Spieler> <Grund>",               "Spieler verwarnen");
          entry(p, "/warnlist <Spieler>",                   "Verwarnungen anzeigen");
-         entry(p, "/clearwarns <Spieler>",                 "Verwarnungen löschen");
+         entry(p, "/delwarn <Spieler> <Nr.>",              "Einzelne Verwarnung löschen");
+         entry(p, "/clearwarns <Spieler>",                 "Alle Verwarnungen löschen");
          entry(p, "/sc [Nachricht]",                       "Staff-Chat senden / umschalten");
          entry(p, "/vanish",                               "Unsichtbar werden");
          entry(p, "/freeze <Spieler>",                     "Spieler einfrieren");

@@ -107,14 +107,37 @@ public class BanManager {
         }
     }
 
-    /** Returns a human-readable duration until the ban expires, e.g. "7 Tag(e)" or "3 Stunde(n)". */
+    /** Returns a short human-readable duration, e.g. "3 Tage" or "1 Stunde". */
     public static String formatDuration(long expiresAt) {
         if (expiresAt == -1) return "Permanent";
         long diff = expiresAt - System.currentTimeMillis();
         if (diff <= 0) return "Abgelaufen";
-        long hours = diff / 3_600_000L;
-        long days = hours / 24;
-        if (days > 0) return days + " Tag(e)";
-        return Math.max(1, hours) + " Stunde(n)";
+        long totalMinutes = diff / 60_000L;
+        long days    = totalMinutes / 1440;
+        long hours   = (totalMinutes % 1440) / 60;
+        long minutes = totalMinutes % 60;
+        if (days > 0)  return plural(days,  "Tag",    "Tage");
+        if (hours > 0) return plural(hours, "Stunde", "Stunden");
+        return plural(Math.max(1, minutes), "Minute", "Minuten");
+    }
+
+    /** Returns detailed remaining time, e.g. "2 Tage 23 Stunden 19 Minuten". */
+    public static String formatRemaining(long expiresAt) {
+        if (expiresAt == -1) return "Permanent";
+        long diff = expiresAt - System.currentTimeMillis();
+        if (diff <= 0) return "Abgelaufen";
+        long totalMinutes = diff / 60_000L;
+        long days    = totalMinutes / 1440;
+        long hours   = (totalMinutes % 1440) / 60;
+        long minutes = totalMinutes % 60;
+        StringBuilder sb = new StringBuilder();
+        if (days > 0)  sb.append(plural(days,  "Tag",    "Tage")).append(" ");
+        if (hours > 0) sb.append(plural(hours, "Stunde", "Stunden")).append(" ");
+        if (minutes > 0 || sb.isEmpty()) sb.append(plural(minutes, "Minute", "Minuten"));
+        return sb.toString().trim();
+    }
+
+    private static String plural(long n, String singular, String plural) {
+        return n + " " + (n == 1 ? singular : plural);
     }
 }

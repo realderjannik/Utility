@@ -42,7 +42,7 @@ public class ChatListener implements Listener {
         if (mute != null) {
             e.setCancelled(true);
             player.sendMessage(Messages.muteChatBlockiert(mute.getReason(),
-                    BanManager.formatDuration(mute.getExpiresAt())));
+                    BanManager.formatRemaining(mute.getExpiresAt())));
             return;
         }
 
@@ -50,7 +50,7 @@ public class ChatListener implements Listener {
         fun.derjxnnik.staffchat.StaffChatManager scm = Utility.getInstance().getStaffChatManager();
         if (scm != null && scm.isToggled(player.getUniqueId())) {
             e.setCancelled(true);
-            scm.broadcast(player.getName(), PlainTextComponentSerializer.plainText().serialize(e.message()));
+            scm.broadcast(player, PlainTextComponentSerializer.plainText().serialize(e.message()));
             return;
         }
 

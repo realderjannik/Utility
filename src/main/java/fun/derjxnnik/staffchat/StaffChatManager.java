@@ -1,6 +1,8 @@
 package fun.derjxnnik.staffchat;
 
 import fun.derjxnnik.misc.Colors;
+import fun.derjxnnik.rank.RankManager;
+import fun.derjxnnik.utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -27,9 +29,28 @@ public class StaffChatManager {
         toggled.remove(uuid);
     }
 
-    public void broadcast(String senderName, String message) {
+    /** Broadcasts to all staff. Pass null for console as sender. */
+    public void broadcast(Player sender, String message) {
+        String rankPrefix = "";
+        String name;
+
+        if (sender != null) {
+            name = sender.getName();
+            RankManager rm = Utility.getInstance().getRankManager();
+            if (rm != null && rm.isAvailable()) {
+                String prefix = rm.getPrefix(sender);
+                if (!prefix.isEmpty()) {
+                    rankPrefix = prefix + Colors.DARK_GRAY + " | ";
+                }
+            }
+        } else {
+            name = "Konsole";
+        }
+
         String line = Colors.DARK_GRAY + "[" + Colors.DARK_RED + "STAFF" + Colors.DARK_GRAY + "] "
-                + Colors.GRAY + senderName + Colors.DARK_GRAY + ": " + Colors.WHITE + message;
+                + rankPrefix + Colors.WHITE + name
+                + Colors.DARK_GRAY + ": " + Colors.GRAY + message;
+
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (p.hasPermission("utility.staffchat")) {
                 p.sendMessage(line);

@@ -203,6 +203,11 @@ commands:
     usage: /clearwarns <Spieler>
     permission: utility.warn
 
+  delwarn:
+    description: Eine einzelne Verwarnung entfernen
+    usage: /delwarn <Spieler> <Nummer>
+    permission: utility.warn
+
   vanish:
     description: Als Teammitglied unsichtbar werden
     usage: /vanish

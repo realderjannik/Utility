@@ -74,6 +74,25 @@ public class WarnManager {
         save();
     }
 
+    /** Removes a single warn by 1-based display index. Returns true on success. */
+    public boolean removeWarn(UUID uuid, int displayIndex) {
+        String base = "warns." + uuid;
+        ConfigurationSection section = config.getConfigurationSection(base + ".entries");
+        if (section == null) return false;
+        List<String> keys = new ArrayList<>(section.getKeys(false));
+        if (displayIndex < 1 || displayIndex > keys.size()) return false;
+        String key = keys.get(displayIndex - 1);
+        config.set(base + ".entries." + key, null);
+        int newCount = Math.max(0, config.getInt(base + ".count", 0) - 1);
+        if (newCount == 0) {
+            config.set(base, null);
+        } else {
+            config.set(base + ".count", newCount);
+        }
+        save();
+        return true;
+    }
+
     /** Checks thresholds and applies auto-mute/ban. Returns "mute", "ban", or null. */
     public String checkThresholds(UUID uuid, String playerName) {
         Utility plugin = Utility.getInstance();

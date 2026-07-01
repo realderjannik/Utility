@@ -78,17 +78,17 @@ public class Messages {
         return Colors.PREFIX + Colors.GREEN + "Spieler " + Colors.WHITE + name + Colors.GREEN + " wurde entstummt.";
     }
 
-    public static String muteNachricht(String grund, String dauer, String muter) {
-        return Colors.PREFIX + Colors.RED + "Du wurdest stummgeschaltet!\n"
+    public static String muteNachricht(String grund, String dauer, String muterDisplay) {
+        return Colors.PREFIX + Colors.RED + "Du wurdest stummgeschaltet!\n\n"
                 + Colors.GRAY + "Grund: " + Colors.WHITE + grund + "\n"
                 + Colors.GRAY + "Dauer: " + Colors.WHITE + dauer + "\n"
-                + Colors.GRAY + "Von: " + Colors.WHITE + muter;
+                + Colors.GRAY + "Von: " + Colors.WHITE + muterDisplay;
     }
 
-    public static String muteChatBlockiert(String grund, String dauer) {
-        return Colors.PREFIX + Colors.RED + "Du bist stummgeschaltet! "
-                + Colors.GRAY + "Grund: " + Colors.WHITE + grund
-                + Colors.GRAY + " | Verbleibend: " + Colors.WHITE + dauer;
+    public static String muteChatBlockiert(String grund, String remaining) {
+        return Colors.PREFIX + Colors.RED + "Du bist stummgeschaltet!\n"
+                + Colors.GRAY + "Grund: " + Colors.WHITE + grund + "\n"
+                + Colors.GRAY + "Verbleibend: " + Colors.WHITE + remaining;
     }
 
     // ==================== /coins ====================
@@ -299,9 +299,9 @@ public class Messages {
                 + Colors.WHITE + reason;
     }
 
-    public static String warnNachricht(String reason, String warnedBy, int count) {
-        return Colors.PREFIX + Colors.YELLOW + "Du wurdest verwarnt! (" + count + ". Verwarnung)\n"
+    public static String warnNachricht(String reason, String warnedByDisplay, int count) {
+        return Colors.PREFIX + Colors.YELLOW + "Du wurdest verwarnt! (" + count + ". Verwarnung)\n\n"
                 + Colors.GRAY + "Grund: " + Colors.WHITE + reason + "\n"
-                + Colors.GRAY + "Von: " + Colors.WHITE + warnedBy;
+                + Colors.GRAY + "Von: " + Colors.WHITE + warnedByDisplay;
     }
 }

@@ -89,6 +89,7 @@ import fun.derjxnnik.commands.ClearWarnsCommand;
 import fun.derjxnnik.commands.StaffChatCommand;
 import fun.derjxnnik.commands.VanishCommand;
 import fun.derjxnnik.commands.FreezeCommand;
+import fun.derjxnnik.commands.DelWarnCommand;
 import fun.derjxnnik.listeners.FreezeListener;
 import java.io.File;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -234,6 +235,9 @@ public final class Utility extends JavaPlugin {
       ClearWarnsCommand clearWarnsCommand = new ClearWarnsCommand(this.warnManager);
       this.getCommand("clearwarns").setExecutor(clearWarnsCommand);
       this.getCommand("clearwarns").setTabCompleter(clearWarnsCommand);
+      DelWarnCommand delWarnCommand = new DelWarnCommand(this.warnManager);
+      this.getCommand("delwarn").setExecutor(delWarnCommand);
+      this.getCommand("delwarn").setTabCompleter(delWarnCommand);
       this.getCommand("sc").setExecutor(new StaffChatCommand(this.staffChatManager));
       this.getCommand("vanish").setExecutor(new VanishCommand(this.vanishManager));
       FreezeCommand freezeCommand = new FreezeCommand(this.freezeManager);

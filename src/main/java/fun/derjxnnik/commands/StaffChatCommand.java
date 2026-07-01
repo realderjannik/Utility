@@ -26,7 +26,7 @@ public class StaffChatCommand implements CommandExecutor {
                 sender.sendMessage(Colors.PREFIX + Colors.RED + "Nutzung: /sc <Nachricht>");
                 return true;
             }
-            staffChatManager.broadcast("Konsole", String.join(" ", args));
+            staffChatManager.broadcast(null, String.join(" ", args));
             return true;
         }
 
@@ -50,7 +50,7 @@ public class StaffChatCommand implements CommandExecutor {
         }
 
         // Inline single message (does not toggle persistent mode)
-        staffChatManager.broadcast(p.getName(), String.join(" ", args));
+        staffChatManager.broadcast(p, String.join(" ", args));
         return true;
     }
 }
