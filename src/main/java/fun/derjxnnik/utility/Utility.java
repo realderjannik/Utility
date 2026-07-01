@@ -79,6 +79,17 @@ import fun.derjxnnik.tpa.TPAAcceptCommand;
 import fun.derjxnnik.tpa.TPADenyCommand;
 import fun.derjxnnik.tpa.TPAManager;
 import fun.derjxnnik.utility.scoreboard.ScoreboardManager;
+import fun.derjxnnik.warn.WarnManager;
+import fun.derjxnnik.staffchat.StaffChatManager;
+import fun.derjxnnik.vanish.VanishManager;
+import fun.derjxnnik.freeze.FreezeManager;
+import fun.derjxnnik.commands.WarnCommand;
+import fun.derjxnnik.commands.WarnListCommand;
+import fun.derjxnnik.commands.ClearWarnsCommand;
+import fun.derjxnnik.commands.StaffChatCommand;
+import fun.derjxnnik.commands.VanishCommand;
+import fun.derjxnnik.commands.FreezeCommand;
+import fun.derjxnnik.listeners.FreezeListener;
 import java.io.File;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -96,6 +107,10 @@ public final class Utility extends JavaPlugin {
    private BanManager banManager;
    private MuteManager muteManager;
    private MessageManager messageManager;
+   private WarnManager warnManager;
+   private StaffChatManager staffChatManager;
+   private VanishManager vanishManager;
+   private FreezeManager freezeManager;
 
    public void onEnable() {
       instance = this;
@@ -117,6 +132,10 @@ public final class Utility extends JavaPlugin {
       this.banManager = new BanManager(this.getDataFolder());
       this.muteManager = new MuteManager(this.getDataFolder());
       this.messageManager = new MessageManager();
+      this.warnManager = new WarnManager(this.getDataFolder());
+      this.staffChatManager = new StaffChatManager();
+      this.vanishManager = new VanishManager();
+      this.freezeManager = new FreezeManager();
 
       ChatInputListener chatListener = new ChatInputListener(homeManager);
       HomeClickListener homeClickListener = new HomeClickListener(homeManager, chatListener);
@@ -206,6 +225,21 @@ public final class Utility extends JavaPlugin {
       this.getCommand("unmute").setExecutor(unmuteCommand);
       this.getCommand("unmute").setTabCompleter(unmuteCommand);
 
+      WarnCommand warnCommand = new WarnCommand(this.warnManager);
+      this.getCommand("warn").setExecutor(warnCommand);
+      this.getCommand("warn").setTabCompleter(warnCommand);
+      WarnListCommand warnListCommand = new WarnListCommand(this.warnManager);
+      this.getCommand("warnlist").setExecutor(warnListCommand);
+      this.getCommand("warnlist").setTabCompleter(warnListCommand);
+      ClearWarnsCommand clearWarnsCommand = new ClearWarnsCommand(this.warnManager);
+      this.getCommand("clearwarns").setExecutor(clearWarnsCommand);
+      this.getCommand("clearwarns").setTabCompleter(clearWarnsCommand);
+      this.getCommand("sc").setExecutor(new StaffChatCommand(this.staffChatManager));
+      this.getCommand("vanish").setExecutor(new VanishCommand(this.vanishManager));
+      FreezeCommand freezeCommand = new FreezeCommand(this.freezeManager);
+      this.getCommand("freeze").setExecutor(freezeCommand);
+      this.getCommand("freeze").setTabCompleter(freezeCommand);
+
       // Social links
       this.getCommand("discord").setExecutor(new DiscordCommand());
       this.getCommand("website").setExecutor(new WebsiteCommand());
@@ -243,6 +277,7 @@ public final class Utility extends JavaPlugin {
       this.getServer().getPluginManager().registerEvents(new ChatListener(this.rankManager, this.colorManager, this), this);
       this.getServer().getPluginManager().registerEvents(new ResourcePackListener(), this);
       this.getServer().getPluginManager().registerEvents(new BanLoginListener(this.banManager), this);
+      this.getServer().getPluginManager().registerEvents(new FreezeListener(this.freezeManager), this);
 
       (new BukkitRunnable() {
          public void run() {
@@ -310,4 +345,8 @@ public final class Utility extends JavaPlugin {
    public BanManager getBanManager()              { return banManager; }
    public MuteManager getMuteManager()            { return muteManager; }
    public MessageManager getMessageManager()      { return messageManager; }
+   public WarnManager getWarnManager()            { return warnManager; }
+   public StaffChatManager getStaffChatManager()  { return staffChatManager; }
+   public VanishManager getVanishManager()        { return vanishManager; }
+   public FreezeManager getFreezeManager()        { return freezeManager; }
 }

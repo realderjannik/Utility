@@ -46,6 +46,14 @@ public class ChatListener implements Listener {
             return;
         }
 
+        // Redirect to staff chat if player has SC mode toggled
+        fun.derjxnnik.staffchat.StaffChatManager scm = Utility.getInstance().getStaffChatManager();
+        if (scm != null && scm.isToggled(player.getUniqueId())) {
+            e.setCancelled(true);
+            scm.broadcast(player.getName(), PlainTextComponentSerializer.plainText().serialize(e.message()));
+            return;
+        }
+
         e.renderer((source, sourceDisplayName, message, viewer) -> {
             Component processedMessage = processMessage(
                     PlainTextComponentSerializer.plainText().serialize(message), player);

@@ -24,7 +24,19 @@ public class QuitListener implements Listener {
    @EventHandler
    public void onPlayerQuit(PlayerQuitEvent e) {
       Player p = e.getPlayer();
-      e.setQuitMessage(Colors.GRAY + "[" + Colors.BOLD_RED + "-" + Colors.GRAY + "] " + Colors.RED + p.getName());
+
+      // Suppress quit message for vanished players
+      fun.derjxnnik.vanish.VanishManager vm = plugin.getVanishManager();
+      if (vm != null && vm.isVanished(p.getUniqueId())) {
+         e.setQuitMessage(null);
+         vm.remove(p.getUniqueId());
+      } else {
+         e.setQuitMessage(Colors.GRAY + "[" + Colors.BOLD_RED + "-" + Colors.GRAY + "] " + Colors.RED + p.getName());
+      }
+
+      // Clear staff-chat toggle
+      fun.derjxnnik.staffchat.StaffChatManager scm = plugin.getStaffChatManager();
+      if (scm != null) scm.remove(p.getUniqueId());
       ScoreboardManager.remove(p);
       Bukkit.getScheduler().runTaskLater(this.plugin, this::updateTablistForAll, 1L);
 

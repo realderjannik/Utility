@@ -289,4 +289,19 @@ public class Messages {
     public static final String SETTINGS_GUTHABEN_AN  = "§7Dein Guthaben ist jetzt für andere §asichtbar§7.";
     public static final String SETTINGS_GUTHABEN_AUS = "§7Dein Guthaben ist jetzt §cprivat§7.";
     public static final String SETTINGS_RUCKSACK_FARBE_NICHT_AKTIV = "§cAktiviere zuerst dein Rucksack-Item!";
+
+    // ==================== /warn ====================
+    public static final String WARN_NUTZUNG = Colors.PREFIX + Colors.RED + "Nutzung: /warn <Spieler> <Grund>";
+
+    public static String warnErfolgreich(String name, String reason, int count) {
+        return Colors.PREFIX + Colors.GREEN + "Spieler " + Colors.WHITE + name
+                + Colors.GREEN + " wurde verwarnt (" + count + ". Verwarnung). Grund: "
+                + Colors.WHITE + reason;
+    }
+
+    public static String warnNachricht(String reason, String warnedBy, int count) {
+        return Colors.PREFIX + Colors.YELLOW + "Du wurdest verwarnt! (" + count + ". Verwarnung)\n"
+                + Colors.GRAY + "Grund: " + Colors.WHITE + reason + "\n"
+                + Colors.GRAY + "Von: " + Colors.WHITE + warnedBy;
+    }
 }

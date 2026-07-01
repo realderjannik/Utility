@@ -182,6 +182,38 @@ commands:
     usage: /twitch
     aliases: [streamer]
 
+  sc:
+    description: Staff-Chat Nachricht senden oder umschalten
+    usage: /sc [Nachricht]
+    permission: utility.staffchat
+    aliases: [staffchat]
+
+  warn:
+    description: Einen Spieler verwarnen
+    usage: /warn <Spieler> <Grund>
+    permission: utility.warn
+
+  warnlist:
+    description: Verwarnungen eines Spielers anzeigen
+    usage: /warnlist <Spieler>
+    permission: utility.warn
+
+  clearwarns:
+    description: Verwarnungen eines Spielers löschen
+    usage: /clearwarns <Spieler>
+    permission: utility.warn
+
+  vanish:
+    description: Als Teammitglied unsichtbar werden
+    usage: /vanish
+    permission: utility.vanish
+    aliases: [v]
+
+  freeze:
+    description: Einen Spieler einfrieren
+    usage: /freeze <Spieler>
+    permission: utility.freeze
+
 permissions:
   utility.ban:
     description: Spieler bannen und entbannen (permanent + unbegrenzte Zeit)
@@ -205,6 +237,22 @@ permissions:
 
   utility.info.bypass:
     description: /info auch bei Spielern mit privat-Profil nutzen
+    default: op
+
+  utility.warn:
+    description: Spieler verwarnen, Verwarnungen anzeigen und löschen
+    default: op
+
+  utility.staffchat:
+    description: Staff-Chat nutzen
+    default: op
+
+  utility.vanish:
+    description: Unsichtbar werden
+    default: op
+
+  utility.freeze:
+    description: Spieler einfrieren
     default: op
 
   utility.chat.use:

@@ -55,6 +55,10 @@ public class JoinListener implements Listener {
 
       Bukkit.getScheduler().runTaskLater(this.plugin, this::updateTablistForAll, 1L);
       Bukkit.getScheduler().runTaskLater(this.plugin, () -> this.backpackItemManager.refreshBackpackItem(player), 10L);
+
+      // Apply current vanish state: hide vanished players from this joiner (if not staff)
+      fun.derjxnnik.vanish.VanishManager vm = plugin.getVanishManager();
+      if (vm != null) vm.applyToNewJoiner(player);
    }
 
    private Component buildLuckPermsWarning() {

@@ -73,6 +73,12 @@ public class HelpCommand implements CommandExecutor {
          entry(p, "/unban <Spieler>",                      "Spieler entbannen");
          entry(p, "/mute <Spieler> <Grund> <Zeit>",        "Spieler stummschalten");
          entry(p, "/unmute <Spieler>",                     "Stummschaltung aufheben");
+         entry(p, "/warn <Spieler> <Grund>",               "Spieler verwarnen");
+         entry(p, "/warnlist <Spieler>",                   "Verwarnungen anzeigen");
+         entry(p, "/clearwarns <Spieler>",                 "Verwarnungen löschen");
+         entry(p, "/sc [Nachricht]",                       "Staff-Chat senden / umschalten");
+         entry(p, "/vanish",                               "Unsichtbar werden");
+         entry(p, "/freeze <Spieler>",                     "Spieler einfrieren");
          entry(p, "/invsee <Spieler>",                     "Inventar einsehen");
          entry(p, "/setspawn [confirm]",                   "Spawn setzen");
          entry(p, "/utility reload",                       "Plugin neu laden");

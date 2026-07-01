@@ -70,13 +70,17 @@ public class RankPermissionSetup {
                 "utility.invsee",
                 "utility.info.bypass",
                 "utility.help.staff",
-                "utility.coins.others");
+                "utility.coins.others",
+                "utility.warn",
+                "utility.staffchat",
+                "utility.freeze");
 
         // ── moderator (inherits helper) ───────────────────────────────────────
         inherit("moderator", "helper");
         addPerms("moderator",
                 "utility.ban",
-                "utility.setspawn");
+                "utility.setspawn",
+                "utility.vanish");
 
         // ── admin (inherits moderator) ────────────────────────────────────────
         inherit("admin", "moderator");

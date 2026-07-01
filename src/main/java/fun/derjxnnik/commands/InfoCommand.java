@@ -108,9 +108,14 @@ public class InfoCommand implements CommandExecutor, TabCompleter {
                    + Colors.GRAY + " | Bis: " + Colors.WHITE + mute.getExpiryString()
                    + Colors.GRAY + " | Von: " + Colors.WHITE + mute.getMuterName();
 
+         int warnCount = Utility.getInstance().getWarnManager().getWarnCount(target.getUniqueId());
+         String warnDisplay = warnCount == 0 ? Colors.GREEN + "Keine"
+                 : Colors.YELLOW + warnCount + " Verwarnung(en)";
+
          p.sendMessage(Colors.DARK_AQUA + "────────────────────────");
-         p.sendMessage(Colors.GRAY + "Ban:  " + banDisplay);
-         p.sendMessage(Colors.GRAY + "Mute: " + muteDisplay);
+         p.sendMessage(Colors.GRAY + "Ban:   " + banDisplay);
+         p.sendMessage(Colors.GRAY + "Mute:  " + muteDisplay);
+         p.sendMessage(Colors.GRAY + "Warns: " + warnDisplay);
       }
 
       p.sendMessage(Colors.DARK_AQUA + "────────────────────────");

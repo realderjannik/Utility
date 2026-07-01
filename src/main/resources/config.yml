@@ -140,6 +140,12 @@ scoreboard:
     - "online:"
     - "%online%/%maxplayers%"
 
+warns:
+  # Auto-mute at this warn count
+  threshold-mute: 3
+  # Auto-ban (7 days) at this warn count
+  threshold-ban: 5
+
 use-command:
   bp: true
   craft: true
