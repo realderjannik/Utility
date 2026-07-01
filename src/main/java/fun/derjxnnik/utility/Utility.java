@@ -142,7 +142,7 @@ public final class Utility extends JavaPlugin {
          LogUtil.info("[Ranks] LuckPerms nicht gefunden. Prefixe werden nicht angezeigt. Download: https://luckperms.net/download");
       }
 
-      // Commands
+      // Commands — core utility
       this.getCommand("backpack").setExecutor(new BackpackCommand(backpackManager));
       this.getCommand("ping").setExecutor(new PingCommand());
       this.getCommand("ec").setExecutor(new EnderChestCommand());
@@ -165,6 +165,7 @@ public final class Utility extends JavaPlugin {
       this.getCommand("settings").setExecutor(new SettingsCommand(settingsManager));
       this.getCommand("bugreport").setExecutor(new BugreportCommand());
 
+      // Info / help
       InfoCommand infoCommand = new InfoCommand();
       this.getCommand("info").setExecutor(infoCommand);
       this.getCommand("info").setTabCompleter(infoCommand);
@@ -172,6 +173,7 @@ public final class Utility extends JavaPlugin {
       this.getCommand("color").setExecutor(new ColorCommand(this.colorManager));
       this.getCommand("color").setTabCompleter(new ColorTabCompleter());
 
+      // Economy
       PayCommand payCommand = new PayCommand(this.currencyManager);
       this.getCommand("pay").setExecutor(payCommand);
       this.getCommand("pay").setTabCompleter(payCommand);
@@ -182,11 +184,13 @@ public final class Utility extends JavaPlugin {
 
       this.getCommand("payments").setExecutor(new PaymentsCommand(this.currencyManager));
 
+      // Messaging
       MsgCommand msgCommand = new MsgCommand(this.messageManager, this.settingsManager);
       this.getCommand("msg").setExecutor(msgCommand);
       this.getCommand("msg").setTabCompleter(msgCommand);
       this.getCommand("r").setExecutor(new ReplyCommand(this.messageManager, this.settingsManager));
 
+      // Moderation
       BanCommand banCommand = new BanCommand(this.banManager);
       this.getCommand("ban").setExecutor(banCommand);
       this.getCommand("ban").setTabCompleter(banCommand);
@@ -202,10 +206,12 @@ public final class Utility extends JavaPlugin {
       this.getCommand("unmute").setExecutor(unmuteCommand);
       this.getCommand("unmute").setTabCompleter(unmuteCommand);
 
+      // Social links
       this.getCommand("discord").setExecutor(new DiscordCommand());
       this.getCommand("website").setExecutor(new WebsiteCommand());
       this.getCommand("twitch").setExecutor(new TwitchCommand());
 
+      // Misc
       ContainerCommand containerCommand = new ContainerCommand(this.lockManager);
       this.getCommand("container").setExecutor(containerCommand);
 
@@ -261,12 +267,6 @@ public final class Utility extends JavaPlugin {
          "resourcepack/assets/minecraft/textures/font/icon_money.png",
          "resourcepack/assets/minecraft/textures/font/icon_clan.png",
          "resourcepack/assets/minecraft/textures/font/small_caps_ascii.png",
-         "resourcepack/assets/minecraft/textures/font/logo.png",
-         "resourcepack/assets/minecraft/textures/font/label_XS.png",
-         "resourcepack/assets/minecraft/textures/font/label_S.png",
-         "resourcepack/assets/minecraft/textures/font/label_M.png",
-         "resourcepack/assets/minecraft/textures/font/label_L.png",
-         "resourcepack/assets/minecraft/textures/font/label_XL.png",
          "resourcepack/assets/minecraft/textures/font/header_general.png",
          "resourcepack/assets/minecraft/textures/font/header_rank.png",
          "resourcepack/assets/minecraft/textures/font/header_money.png",

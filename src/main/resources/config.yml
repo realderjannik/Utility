@@ -1,42 +1,40 @@
 resource-pack:
   enabled: true
-  # Öffentliche IP deines Servers (z.B. "123.45.67.89")
+  # Public IP of your server (e.g. "123.45.67.89")
   server-ip: ""
-  # Port auf dem das Pack ausgeliefert wird (muss in der Firewall offen sein)
+  # Port the resource pack is served on (must be open in your firewall)
   port: 8080
-  # Nachricht die Spielern beim Download-Dialog angezeigt wird
+  # Message shown to players in the download dialog
   prompt: "Bitte akzeptiere das Resource Pack!"
 
 backpack:
-  # Standard-Slot-Anzahl als Fallback (falls kein Rang zutrifft)
+  # Default slot count (used when no matching rank is found)
   slots: 9
   allow-shulkers: false
   allow-admin-edit: true
-  # Slots pro Rang (LuckPerms-Gruppenname, lowercase). -1 = deaktiviert für diesen Rang.
+  # Slots per rank (LuckPerms group name, lowercase). -1 = disabled for this rank.
   rank-slots:
     admin: 54
-    a-moderator: 54
-    d-moderator: 36
+    moderator: 54
+    helper: 27
+    famous: 54
     streamer: 27
-    a-vip: 27
-    d-vip: 27
-    a-subscriber: 18
-    d-subscriber: 18
+    vip: 27
+    subscriber: 18
     default: 9
 
 homes:
-  # Standard-Limit als Fallback
+  # Default limit (used when no matching rank is found)
   max-homes: 3
-  # Limit pro Rang. -1 = unbegrenzt.
+  # Limit per rank. -1 = unlimited.
   rank-homes:
     admin: -1
-    a-moderator: -1
-    d-moderator: 10
+    moderator: -1
+    helper: -1
+    famous: 10
     streamer: 7
-    a-vip: 5
-    d-vip: 5
-    a-subscriber: 4
-    d-subscriber: 4
+    vip: 5
+    subscriber: 4
     default: 3
 
 tpa:
@@ -59,16 +57,12 @@ ranks:
   # Placeholders: {prefix} {name} — message is appended automatically
   chat-format: "{prefix} | {name}"
   scoreboard-label: "Rang"
-  # Farbverlauf pro Rang (Key = LuckPerms Gruppenname, lowercase)
-  # "default" wird verwendet wenn kein passender Rang gefunden wird
+  # Gradient per rank (key = LuckPerms group name, lowercase)
+  # "default" is used when no matching rank is found
   gradients:
     admin:
       colors: ["#FF2222", "#880000"]
     moderator:
-      colors: ["#55FF55", "#00AA00"]
-    a-moderator:
-      colors: ["#55FF55", "#00AA00"]
-    d-moderator:
       colors: ["#55FF55", "#00AA00"]
     helper:
       colors: ["#4488FF", "#0033AA"]
@@ -76,14 +70,10 @@ ranks:
       colors: ["#FF00FF", "#BB00FF"]
     streamer:
       colors: ["#AA44FF", "#FF44BB"]
-    a-vip:
+    vip:
       colors: ["#FFD700", "#FFC107"]
-    d-vip:
-      colors: ["#ADFF2F", "#7CFC00"]
-    a-subscriber:
+    subscriber:
       colors: ["#00BCD4", "#0097A7"]
-    d-subscriber:
-      colors: ["#64B5F6", "#1976D2"]
     default:
       colors: ["#AAAAAA", "#FFFFFF"]
 

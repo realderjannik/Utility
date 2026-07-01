@@ -19,11 +19,9 @@ public class RankPermissionSetup {
      * Safe to run multiple times – adding an existing node is a no-op in LP.
      *
      * Hierarchy (lowest → highest):
-     *   default → a-subscriber / d-subscriber
-     *           → a-vip / d-vip
-     *           → streamer
-     *           → a-moderator / d-moderator
-     *           → admin
+     *   default → subscriber → vip → streamer
+     *                             → famous
+     *          → helper → moderator → admin
      */
     public void apply() {
         // ── default ───────────────────────────────────────────────────────────
@@ -40,28 +38,27 @@ public class RankPermissionSetup {
                 "utility.craftingtable",
                 "utility.chat.use");
 
-        // ── subscriber (paired: a + d, both inherit default) ──────────────────
-        inherit("a-subscriber", "default");
-        inherit("d-subscriber", "default");
-        // no extra perms over default — distinguish from default by rank only
+        // ── subscriber (inherits default) ─────────────────────────────────────
+        inherit("subscriber", "default");
+        // no extra perms over default — distinguished by rank only
 
-        // ── vip (paired: a + d, both inherit a-subscriber) ───────────────────
-        inherit("a-vip", "a-subscriber");
-        inherit("d-vip", "a-subscriber");
-        addPerms("a-vip",
-                "utility.rename",
-                "utility.hat",
-                "utility.chat.color.*",
-                "utility.chat.format.*");
-        addPerms("d-vip",
+        // ── vip (inherits subscriber) ─────────────────────────────────────────
+        inherit("vip", "subscriber");
+        addPerms("vip",
                 "utility.rename",
                 "utility.hat",
                 "utility.chat.color.*",
                 "utility.chat.format.*");
 
-        // ── streamer (inherits a-vip) ─────────────────────────────────────────
-        inherit("streamer", "a-vip");
+        // ── streamer (inherits vip) ───────────────────────────────────────────
+        inherit("streamer", "vip");
         addPerms("streamer",
+                "utility.coins.others",
+                "utility.info.bypass");
+
+        // ── famous (inherits vip, content creator parallel to streamer) ───────
+        inherit("famous", "vip");
+        addPerms("famous",
                 "utility.coins.others",
                 "utility.info.bypass");
 
@@ -69,25 +66,20 @@ public class RankPermissionSetup {
         inherit("helper", "default");
         addPerms("helper",
                 "utility.mute",
-                "utility.ban.limited",   // max 7 days, no permanent
+                "utility.ban.limited",
                 "utility.invsee",
                 "utility.info.bypass",
                 "utility.help.staff",
                 "utility.coins.others");
 
-        // ── moderator (merged role, inherits helper) ──────────────────────────
+        // ── moderator (inherits helper) ───────────────────────────────────────
         inherit("moderator", "helper");
         addPerms("moderator",
                 "utility.ban",
                 "utility.setspawn");
 
-        // ── moderator (paired legacy roles, inherit moderator) ────────────────
-        inherit("a-moderator", "moderator");
-        inherit("d-moderator", "moderator");
-
         // ── admin (inherits moderator) ────────────────────────────────────────
         inherit("admin", "moderator");
-        // Admin is op in most servers; explicit perm list kept minimal
 
         LogUtil.info("[RankPerms] Permissions erfolgreich auf alle Gruppen angewendet.");
     }
